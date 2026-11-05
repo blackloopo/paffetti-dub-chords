@@ -1,0 +1,33 @@
+PAFFETTI DUB CHORDS  v0.1
+Powered by Black Loops
+
+Sampler di stab dub techno: ogni tasto suona un accordo completo.
+250 stab in 6 categorie (Basic Channel, Maurizio, Rhythm & Sound,
+Chain Reaction, Swayzak, Grit 12 bit) + la tua cartella "I miei sample".
+
+INSTALLAZIONE
+1. Copia "Paffetti Dub Chords.vst3" nella cartella:
+   Macintosh HD > Utenti > (il tuo nome) > Libreria > Audio > Plug-Ins > VST3
+2. Copia "Paffetti Dub Chords.component" nella cartella:
+   Macintosh HD > Utenti > (il tuo nome) > Libreria > Audio > Plug-Ins > Components
+   (la cartella Libreria è nascosta: nel Finder menu Vai > Vai alla cartella
+   e scrivi  ~/Library/Audio/Plug-Ins )
+3. Il plugin non è firmato da Apple: la prima volta apri il Terminale e incolla
+   questi due comandi, uno alla volta:
+
+   xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/VST3/"Paffetti Dub Chords.vst3"
+
+   xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/Components/"Paffetti Dub Chords.component"
+
+4. In Ableton: Preferenze > Plug-in > "Ricerca nuovamente" (Rescan).
+   Lo trovi negli strumenti sotto Black Loops.
+
+COME SI SUONA
+- C3 suona l'accordo alla sua altezza originale; gli altri tasti lo traspongono.
+- Clicca le categorie sullo schermo, la rotella scorre la lista, < > cambiano stab.
+- Doppio clic su una manopola = valore iniziale.
+- SYNC acceso: il delay, il phaser e il flanger seguono il tempo del progetto.
+- + MIEI SAMPLE: scegli una cartella con i tuoi WAV/AIFF/FLAC. Se nel nome c'è la
+  tonalità (es. "Cm7", "F#min") il plugin la riconosce, altrimenti C3 = altezza originale.
+
+Font: Press Start 2P e VT323 (SIL Open Font License).

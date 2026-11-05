@@ -1,0 +1,4 @@
+JUCE/
+build/
+build-*/
+.DS_Store

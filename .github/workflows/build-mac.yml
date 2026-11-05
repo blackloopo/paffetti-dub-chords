@@ -1,0 +1,87 @@
+name: Compila per Mac
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: [ 'builds/**' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mac:
+    runs-on: macos-14
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scarica JUCE
+        run: git clone --depth 1 --branch 8.0.10 https://github.com/juce-framework/JUCE.git JUCE
+
+      - name: Configura
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 2>&1 | tee log-configura.txt
+
+      - name: Compila
+        run: |
+          set -o pipefail
+          cmake --build build --config Release -j 3 2>&1 | tee log-compila.txt
+
+      - name: Inserisci i sample e firma
+        run: |
+          set -e
+          ART=build/PaffettiDubChords_artefacts/Release
+          for B in "$ART/VST3/Paffetti Dub Chords.vst3" "$ART/AU/Paffetti Dub Chords.component"; do
+            mkdir -p "$B/Contents/Resources/Samples"
+            cp -R Samples/ "$B/Contents/Resources/Samples/"
+            codesign --force --deep --sign - "$B"
+            codesign --verify --deep --strict "$B"
+          done
+          lipo -info "$ART/VST3/Paffetti Dub Chords.vst3/Contents/MacOS/Paffetti Dub Chords" | tee log-arch.txt
+
+      - name: Test Apple auval (Audio Unit)
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          mkdir -p ~/Library/Audio/Plug-Ins/Components
+          cp -R "build/PaffettiDubChords_artefacts/Release/AU/Paffetti Dub Chords.component" ~/Library/Audio/Plug-Ins/Components/
+          killall -9 AudioComponentRegistrar || true
+          sleep 3
+          auval -v aumu Pdch Blkl 2>&1 | tee log-auval.txt
+          grep -q "AU VALIDATION SUCCEEDED" log-auval.txt
+
+      - name: Test pluginval (VST3, apre anche l'interfaccia)
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          curl -sSL -o pluginval.zip https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip
+          unzip -q pluginval.zip
+          ./pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process \
+            --timeout-ms 120000 "build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3" 2>&1 | tee log-pluginval.txt
+
+      - name: Prepara lo zip
+        run: |
+          set -e
+          ART=build/PaffettiDubChords_artefacts/Release
+          mkdir -p "pkg/Paffetti Dub Chords"
+          cp -R "$ART/VST3/Paffetti Dub Chords.vst3" "pkg/Paffetti Dub Chords/"
+          cp -R "$ART/AU/Paffetti Dub Chords.component" "pkg/Paffetti Dub Chords/"
+          cp LEGGIMI.txt "pkg/Paffetti Dub Chords/"
+          cd pkg && ditto -c -k --sequesterRsrc --keepParent "Paffetti Dub Chords" "../Paffetti_Dub_Chords_mac.zip"
+
+      - name: Pubblica sul ramo builds
+        if: always()
+        run: |
+          set -e
+          mkdir -p out
+          cp log-*.txt out/ 2>/dev/null || true
+          [ -f Paffetti_Dub_Chords_mac.zip ] && cp Paffetti_Dub_Chords_mac.zip out/ || echo "zip non creato" > out/ERRORE.txt
+          echo "${{ github.sha }} ${{ job.status }}" > out/esito.txt
+          cd out
+          git init -q -b builds
+          git config user.name "build-bot"; git config user.email "build-bot@users.noreply.github.com"
+          git add -A && git commit -q -m "Build ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" builds

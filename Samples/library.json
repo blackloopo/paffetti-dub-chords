@@ -1,0 +1,1280 @@
+{
+"categories": [
+{
+"id": "BC",
+"name": "Basic Channel"
+},
+{
+"id": "MZ",
+"name": "Maurizio"
+},
+{
+"id": "RS",
+"name": "Rhythm & Sound"
+},
+{
+"id": "CR",
+"name": "Chain Reaction"
+},
+{
+"id": "SW",
+"name": "Swayzak"
+},
+{
+"id": "GR",
+"name": "Grit 12 bit"
+}
+],
+"samples": [
+{
+"file": "BC/BC-001 Cm7.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-002 Am7o.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-003 Dm9.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-004 Cm9o.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-005 Cm11.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-006 Cq4.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-007 Cq5.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-008 Csowhat.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-009 A7sus4.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-010 Bbm.flac",
+"root": 46,
+"cat": "BC"
+},
+{
+"file": "BC/BC-011 Cclus.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-012 Datone.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-013 Cmadd9.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-014 Cm7no5.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-015 Csus2.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-016 Cdrk.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-017 Aq5.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-018 Csus2.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-019 Cq4.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-020 Dm7o.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-021 Bbsus2.flac",
+"root": 46,
+"cat": "BC"
+},
+{
+"file": "BC/BC-022 Adrk.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-023 Dmadd9.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-024 Bbq4.flac",
+"root": 46,
+"cat": "BC"
+},
+{
+"file": "BC/BC-025 Cm.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-026 Bbsus2.flac",
+"root": 46,
+"cat": "BC"
+},
+{
+"file": "BC/BC-027 Aq5.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-028 Cm9o.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-029 Csus2.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-030 Cm11.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-031 Dsowhat.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-032 Am11.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-033 Dm9.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-034 Cq4.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-035 Cm9.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-036 A7sus4.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-037 Asus2.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-038 Cq5.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-039 Cclus.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-040 Cm.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-041 Aatone.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-042 Csus2.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-043 Cm7no5.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-044 Datone.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-045 Dsus2.flac",
+"root": 50,
+"cat": "BC"
+},
+{
+"file": "BC/BC-046 Cm7.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-047 Csowhat.flac",
+"root": 48,
+"cat": "BC"
+},
+{
+"file": "BC/BC-048 Am9.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-049 Amadd9.flac",
+"root": 45,
+"cat": "BC"
+},
+{
+"file": "BC/BC-050 Bbsowhat.flac",
+"root": 46,
+"cat": "BC"
+},
+{
+"file": "MZ/MZ-001 Am7.flac",
+"root": 45,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-002 Dm9.flac",
+"root": 50,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-003 Cm.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-004 C7sus4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-005 C9sus4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-006 Cm7o.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-007 Dm11.flac",
+"root": 50,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-008 Csus4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-009 Cmadd9.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-010 Cq4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-011 Am6.flac",
+"root": 45,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-012 Cm11b.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-013 Bbm7o.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-014 C9sus4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-015 D9sus4.flac",
+"root": 50,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-016 Amadd9.flac",
+"root": 45,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-017 Cm11.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-018 Dsus4.flac",
+"root": 50,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-019 Bbsus4.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-020 C9sus4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-021 D9sus4.flac",
+"root": 50,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-022 Bbq4.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-023 Bbmadd9.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-024 Bbm7.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-025 Cm11b.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-026 Cm9.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-027 Cm.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-028 Dm.flac",
+"root": 50,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-029 Bbsus4.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-030 C9sus4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-031 Bbsus4.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-032 Cm.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-033 Cm7.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-034 C7sus4.flac",
+"root": 48,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-035 D7sus4.flac",
+"root": 50,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-036 A7sus4.flac",
+"root": 45,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-037 Bb9sus4.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-038 Am7o.flac",
+"root": 45,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-039 Am9.flac",
+"root": 45,
+"cat": "MZ"
+},
+{
+"file": "MZ/MZ-040 Bbm6.flac",
+"root": 46,
+"cat": "MZ"
+},
+{
+"file": "RS/RS-001 Fm.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-002 Gm7.flac",
+"root": 55,
+"cat": "RS"
+},
+{
+"file": "RS/RS-003 Fsus2.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-004 Asus4.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-005 Gm7no5.flac",
+"root": 55,
+"cat": "RS"
+},
+{
+"file": "RS/RS-006 E5th.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-007 Gm6.flac",
+"root": 55,
+"cat": "RS"
+},
+{
+"file": "RS/RS-008 Emin3o.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-009 Emadd9.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-010 Fm7o.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-011 E5th.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-012 Am7o.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-013 Em7no5.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-014 Am7.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-015 Em7no5.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-016 Esus2.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-017 Em7.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-018 Emin3o.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-019 Gmadd9.flac",
+"root": 55,
+"cat": "RS"
+},
+{
+"file": "RS/RS-020 Asus2.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-021 Em.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-022 Amadd9.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-023 Fm7no5.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-024 Esus2.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-025 Am7o.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-026 F5th.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-027 Em7.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-028 Asus4.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-029 Gsus4.flac",
+"root": 55,
+"cat": "RS"
+},
+{
+"file": "RS/RS-030 Am7no5.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-031 Gsus2.flac",
+"root": 55,
+"cat": "RS"
+},
+{
+"file": "RS/RS-032 Em7no5.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-033 Fm7o.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-034 Em.flac",
+"root": 52,
+"cat": "RS"
+},
+{
+"file": "RS/RS-035 Fm.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-036 Fm7no5.flac",
+"root": 53,
+"cat": "RS"
+},
+{
+"file": "RS/RS-037 Amin3o.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-038 Am6.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-039 Amin3o.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "RS/RS-040 Asus2.flac",
+"root": 57,
+"cat": "RS"
+},
+{
+"file": "CR/CR-001 Cm9o.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-002 Bbm11.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-003 Cq4.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-004 Cq5.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-005 Atritq.flac",
+"root": 45,
+"cat": "CR"
+},
+{
+"file": "CR/CR-006 Cclus.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-007 Catone.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-008 D5th2.flac",
+"root": 50,
+"cat": "CR"
+},
+{
+"file": "CR/CR-009 Cm7b5.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-010 Cmmaj7.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-011 Cdrk.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-012 Csowhat.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-013 Adrk.flac",
+"root": 45,
+"cat": "CR"
+},
+{
+"file": "CR/CR-014 Am9o.flac",
+"root": 45,
+"cat": "CR"
+},
+{
+"file": "CR/CR-015 Dtritq.flac",
+"root": 50,
+"cat": "CR"
+},
+{
+"file": "CR/CR-016 Cclus.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-017 Cm9o.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-018 Bbatone.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-019 Dmmaj7.flac",
+"root": 50,
+"cat": "CR"
+},
+{
+"file": "CR/CR-020 Datone.flac",
+"root": 50,
+"cat": "CR"
+},
+{
+"file": "CR/CR-021 Bbm7b5.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-022 Bbdrk.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-023 Cdrk.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-024 Atritq.flac",
+"root": 45,
+"cat": "CR"
+},
+{
+"file": "CR/CR-025 Aq4.flac",
+"root": 45,
+"cat": "CR"
+},
+{
+"file": "CR/CR-026 Dm7b5.flac",
+"root": 50,
+"cat": "CR"
+},
+{
+"file": "CR/CR-027 Dsowhat.flac",
+"root": 50,
+"cat": "CR"
+},
+{
+"file": "CR/CR-028 Bbmmaj7.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-029 Cm9o.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-030 Bbm7b5.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-031 Cmmaj7.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-032 Bbq4.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-033 Bbm7b5.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-034 Dclus.flac",
+"root": 50,
+"cat": "CR"
+},
+{
+"file": "CR/CR-035 Bbsowhat.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-036 Bbm9o.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-037 Bbclus.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "CR/CR-038 Am9o.flac",
+"root": 45,
+"cat": "CR"
+},
+{
+"file": "CR/CR-039 Ctritq.flac",
+"root": 48,
+"cat": "CR"
+},
+{
+"file": "CR/CR-040 Bbclus.flac",
+"root": 46,
+"cat": "CR"
+},
+{
+"file": "SW/SW-001 Cmaj7.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-002 Cmaj9.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-003 Bbmaj7o.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-004 D69.flac",
+"root": 50,
+"cat": "SW"
+},
+{
+"file": "SW/SW-005 Bbm9.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-006 Am11.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-007 Dadd11.flac",
+"root": 50,
+"cat": "SW"
+},
+{
+"file": "SW/SW-008 C9sus4.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-009 Cm11b.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-010 Cmadd9.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-011 Bbadd11.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-012 Bbmaj7o.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-013 C69.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-014 Amaj9.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-015 C9sus4.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-016 D69.flac",
+"root": 50,
+"cat": "SW"
+},
+{
+"file": "SW/SW-017 A69.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-018 Amaj9.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-019 Cmaj7o.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-020 Cadd11.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-021 Bb69.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-022 Am11.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-023 Cm11.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-024 Cm11.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-025 Dadd11.flac",
+"root": 50,
+"cat": "SW"
+},
+{
+"file": "SW/SW-026 Bb9sus4.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-027 Cm11b.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-028 A69.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-029 C69.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-030 A9sus4.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-031 Cmaj7o.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-032 C9sus4.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-033 Bb9sus4.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-034 Bbadd11.flac",
+"root": 46,
+"cat": "SW"
+},
+{
+"file": "SW/SW-035 Aadd11.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "SW/SW-036 Cm11b.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-037 Cmaj7.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-038 Cm9.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-039 Cm11b.flac",
+"root": 48,
+"cat": "SW"
+},
+{
+"file": "SW/SW-040 Amaj7.flac",
+"root": 45,
+"cat": "SW"
+},
+{
+"file": "GR/GR-001 Am7.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-002 Dm9.flac",
+"root": 50,
+"cat": "GR"
+},
+{
+"file": "GR/GR-003 Bbm7o.flac",
+"root": 46,
+"cat": "GR"
+},
+{
+"file": "GR/GR-004 Cq4.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-005 Asowhat.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-006 C7sus4.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-007 Cm.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-008 Catone.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-009 Bbclus.flac",
+"root": 46,
+"cat": "GR"
+},
+{
+"file": "GR/GR-010 C5th.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-011 Adrk.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-012 Cm11.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-013 Cm7.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-014 Csowhat.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-015 C7sus4.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-016 Bbatone.flac",
+"root": 46,
+"cat": "GR"
+},
+{
+"file": "GR/GR-017 Cm11.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-018 Cm11.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-019 Am7o.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-020 Cm11.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-021 Aclus.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-022 Catone.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-023 Catone.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-024 Csowhat.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-025 Cm11.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-026 Bbm7o.flac",
+"root": 46,
+"cat": "GR"
+},
+{
+"file": "GR/GR-027 Aq4.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-028 Catone.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-029 Am9.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-030 Bbm9.flac",
+"root": 46,
+"cat": "GR"
+},
+{
+"file": "GR/GR-031 Csowhat.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-032 Am.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-033 Bbm7.flac",
+"root": 46,
+"cat": "GR"
+},
+{
+"file": "GR/GR-034 Adrk.flac",
+"root": 45,
+"cat": "GR"
+},
+{
+"file": "GR/GR-035 Catone.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-036 Cq4.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-037 Bb5th.flac",
+"root": 46,
+"cat": "GR"
+},
+{
+"file": "GR/GR-038 Cm.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-039 C5th.flac",
+"root": 48,
+"cat": "GR"
+},
+{
+"file": "GR/GR-040 D5th.flac",
+"root": 50,
+"cat": "GR"
+}
+]
+}
