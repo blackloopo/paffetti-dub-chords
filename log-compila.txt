@@ -1,0 +1,231 @@
+[  1%] Generating juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData.h
+[  3%] Building CXX object CMakeFiles/PaffettiDubChords_vst3_helper.dir/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.mm.o
+[  5%] Building CXX object CMakeFiles/PDCBinary.dir/juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData2.cpp.o
+[  7%] Building CXX object CMakeFiles/PDCBinary.dir/juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData1.cpp.o
+[  9%] Linking CXX static library libPDCBinary.a
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.mm:35:
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.cpp:47:
+In file included from /Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/functional:601:
+In file included from /Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/vector:363:
+In file included from /Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/locale:203:
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wstring_convert.h:179:1: warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated [-Wdeprecated-declarations]
+  179 | wstring_convert<_Codecvt, _Elem, _WideAlloc, _ByteAlloc>::to_bytes(const _Elem* __frm, const _Elem* __frm_end) {
+      | ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_audio_processors/format_types/VST3_SDK/public.sdk/source/common/commonstringconvert.cpp:92:22: note: in instantiation of member function 'std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>::to_bytes' requested here
+   92 |         return converter ().to_bytes (reinterpret_cast<const UTF16Type*> (str.data ()),
+      |                             ^
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wstring_convert.h:34:7: note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+   34 | class _LIBCPP_DEPRECATED_IN_CXX17 wstring_convert {
+      |       ^
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:581:41: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+  581 | #    define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+      |                                         ^
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:554:49: note: expanded from macro '_LIBCPP_DEPRECATED'
+  554 | #      define _LIBCPP_DEPRECATED __attribute__((__deprecated__))
+      |                                                 ^
+1 warning generated.
+[  9%] Built target PDCBinary
+[ 13%] Building CXX object CMakeFiles/PaffettiDubChords.dir/Source/PluginProcessor.cpp.o
+[ 13%] Building CXX object CMakeFiles/PaffettiDubChords.dir/Source/PluginEditor.cpp.o
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.mm:35:
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.cpp:47:
+In file included from /Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/functional:601:
+In file included from /Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/vector:363:
+In file included from /Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/locale:203:
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wstring_convert.h:179:1: warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated [-Wdeprecated-declarations]
+  179 | wstring_convert<_Codecvt, _Elem, _WideAlloc, _ByteAlloc>::to_bytes(const _Elem* __frm, const _Elem* __frm_end) {
+      | ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_audio_processors/format_types/VST3_SDK/public.sdk/source/common/commonstringconvert.cpp:92:22: note: in instantiation of member function 'std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>::to_bytes' requested here
+   92 |         return converter ().to_bytes (reinterpret_cast<const UTF16Type*> (str.data ()),
+      |                             ^
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__locale_dir/wstring_convert.h:34:7: note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+   34 | class _LIBCPP_DEPRECATED_IN_CXX17 wstring_convert {
+      |       ^
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:581:41: note: expanded from macro '_LIBCPP_DEPRECATED_IN_CXX17'
+  581 | #    define _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_DEPRECATED
+      |                                         ^
+/Applications/Xcode_26.6.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config:554:49: note: expanded from macro '_LIBCPP_DEPRECATED'
+  554 | #      define _LIBCPP_DEPRECATED __attribute__((__deprecated__))
+      |                                                 ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:14:29: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+   14 |     inc = std::pow (2.0, (n - home + tune) / 12.0) * sample->sourceRate / hostRate;
+      |                           ~~^~~~~~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:297:61: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  297 |             g.fillRect (juce::Rectangle<float> (wr.getX() + i * bw, wr.getCentreY() - h * 0.5f, juce::jmax (1.0f, bw - 1.0f), h));
+      |                                                             ^ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:363:35: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  363 |         juce::Rectangle<float> r (wi * kw, 0, kw, h);
+      |                                   ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:333:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  333 |                    /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:373:54: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion] 
+if (cyc != lastShCycle) { shValue = lfoRn  373 |         if d.n(eixstBFllaoat() * 2.0f - 1.0f; lcaks t(nS)hCycle = cyc) { j;uc e::Rec}
+      |                         ~~~ ^  ~~~~~~~~~~~
+tangle<float> r (wi * kw - kw * 0.33f, 0, kw * 0.66f, h * 0.6f);
+      |                                                      ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:422:12: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  422 |     if (lo != lastLow || hi != lastHigh)
+      |         ~~ ^  ~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:422:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  422 |     if (lo != lastLow || hi != lastHigh)
+      |                          ~~ ^  ~~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:424:81: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  424 |         auto lc = juce::dsp::IIR::Coefficients<float>::makeLowShelf (sr, 120.0, 0.7, juce::Decibels::decibelsToGain (lo));
+      |                   ~~~~                                                          ^~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:425:83: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  425 |         auto hc = juce::dsp::IIR::Coefficients<float>::makeHighS/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpphelf (sr:388:60: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  388 |  , 5000.0, 0.7, juce:           if:Decibels:: d(eicsiBblealcskT o(Gna)i)n  {( hiif) )(;j
+u      c| e                  ~~~~                                                            ^~~:
+:Rectangle<float> (wi * kw - kw * 0.33f, 0, kw * 0.66f, h * 0.6f).contains (p)) return n; }
+      |                                                            ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:395:41: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  395 |         if (p.x >= wi * kw && p.x < (wi + 1) * kw) return n;
+      |                                      ~~~^~~  ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:395:20: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  395 |         if (p.x >= wi * kw && p.x < (wi + 1) * kw) return n;
+      |                    ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:437:57: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  437 |         g.fillRect (juce::Rectangle<float> (in.getX() + i * px, y - 1.5f, juce::jmax (2.0f, px), 3.0f));
+      |                                                         ^ ~
+1 warning generated.
+[ 15%] Linking CXX executable PaffettiDubChords_vst3_helper
+[ 15%] Built target PaffettiDubChords_vst3_helper
+[ 17%] Building CXX object CMakeFiles/PaffettiDubChords.dir/Source/Library.cpp.o
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:1:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.h:119:12: warning: private field 'freeLfoPhase' is not used [-Wunused-private-field]
+  119 |     double freeLfoPhase = 0;
+      |            ^
+7 warnings generated.
+7 warnings generated.
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:297:61: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  297 |             g.fillRect (juce::Rectangle<float> (wr.getX() + i * bw, wr.getCentreY() - h * 0.5f, juce::jmax (1.0f, bw - 1.0f), h));
+      |                                                             ^ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:363:35: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  363 |         juce::Rectangle<float> r (wi * kw, 0, kw, h);
+      |                                   ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:373:54: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  373 |         if (isBlack (n)) { juce::Rectangle<float> r (wi * kw - kw * 0.33f, 0, kw * 0.66f, h * 0.6f);
+      |                                                      ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:388:60: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  388 |             if (isBlack (n)) { if (juce::Rectangle<float> (wi * kw - kw * 0.33f, 0, kw * 0.66f, h * 0.6f).contains (p)) return n; }
+      |                                                            ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:395:41: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  395 |         if (p.x >= wi * kw && p.x < (wi + 1) * kw) return n;
+      |                                      ~~~^~~  ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:395:20: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  395 |         if (p.x >= wi * kw && p.x < (wi + 1) * kw) return n;
+      |                    ^~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:437:57: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+  437 |         g.fillRect (juce::Rectangle<float> (in.getX() + i * px, y - 1.5f, juce::jmax (2.0f, px), 3.0f));
+      |                                                         ^ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:14:29: warning: implicit conversion from 'int' to 'float' may lose precision [-Wimplicit-int-float-conversion]
+   14 |     inc = std::pow (2.0, (n - home + tune) / 12.0) * sample->sourceRate / hostRate;
+      |                           ~~^~~~~~ ~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:333:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  333 |                     if (cyc != lastShCycle) { shValue = lfoRnd.nextFloat() * 2.0f - 1.0f; lastShCycle = cyc; }
+      |                         ~~~ ^  ~~~~~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:422:12: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  422 |     if (lo != lastLow || hi != lastHigh)
+      |         ~~ ^  ~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:422:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  422 |     if (lo != lastLow || hi != lastHigh)
+      |                          ~~ ^  ~~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:424:81: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  424 |         auto lc = juce::dsp::IIR::Coefficients<float>::makeLowShelf (sr, 120.0, 0.7, juce::Decibels::decibelsToGain (lo));
+      |                   ~~~~                                                          ^~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:425:83: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  425 |         auto hc = juce::dsp::IIR::Coefficients<float>::makeHighShelf (sr, 5000.0, 0.7, juce::Decibels::decibelsToGain (hi));
+      |                   ~~~~                                                            ^~~
+[ 19%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_processors/juce_audio_processors_ara.cpp.o
+[ 21%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_processors/juce_audio_processors_lv2_libs.cpp.o
+[ 23%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_processors/juce_audio_processors.mm.o
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:1:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.h:119:12: warning: private field 'freeLfoPhase' is not used [-Wunused-private-field]
+  119 |     double freeLfoPhase = 0;
+      |            ^
+7 warnings generated.
+[ 25%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_gui_extra/juce_gui_extra.mm.o
+7 warnings generated.
+[ 27%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_gui_basics/juce_gui_basics.mm.o
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:61:2: warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_core/system/juce_PlatformDefs.h:292:38: note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>:163:2: note: expanded from here
+  163 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:189:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1923:17: warning: enumeration value 'NSEventTypeMouseCancelled' not explicitly handled in switch [-Wswitch-enum]
+ 1923 |         switch ([e type])
+      |                 ^~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1923:17: note: add missing switch cases
+ 1923 |         switch ([e type])
+      |                 ^
+[ 29%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.o
+[ 31%] Building C object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.o
+[ 33%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_graphics/juce_graphics.mm.o
+2 warnings generated.
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:61:2: warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_core/system/juce_PlatformDefs.h:292:38: note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>:47:2: note: expanded from here
+   47 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:189:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1923:17: warning: enumeration value 'NSEventTypeMouseCancelled' not explicitly handled in switch [-Wswitch-enum]
+ 1923 |         switch ([e type])
+      |                 ^~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1923:17: note: add missing switch cases
+ 1923 |         switch ([e type])
+      |                 ^
+[ 35%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_events/juce_events.mm.o
+[ 37%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.o
+[ 39%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_core/juce_core.mm.o
+2 warnings generated.
+[ 41%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_data_structures/juce_data_structures.mm.o
+[ 43%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 45%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 47%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_dsp/juce_dsp.mm.o
+[ 49%] Linking CXX static library "PaffettiDubChords_artefacts/Release/libPaffetti Dub Chords_SharedCode.a"
+[ 49%] Built target PaffettiDubChords
+[ 52%] Generating PaffettiDubChords_artefacts/JuceLibraryCode/PaffettiDubChords_VST3/PkgInfo
+[ 52%] Generating PaffettiDubChords_artefacts/JuceLibraryCode/PaffettiDubChords_AU/PkgInfo
+[ 56%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.o
+[ 56%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.o
+[ 58%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.o
+[ 64%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.o
+[ 64%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.o
+[ 64%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.o
+[ 66%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.mm.o
+[ 70%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.o
+[ 70%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm.o
+[ 72%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.o
+[ 74%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_2.mm.o
+[ 76%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AUv3.mm.o
+[ 78%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.mm.o
+[ 80%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.mm.o
+[ 82%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm.o
+[ 84%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm.o
+[ 86%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm.o
+[ 88%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_2.mm.o
+[ 90%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AUv3.mm.o
+[ 92%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.mm.o
+[ 94%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm.o
+[ 96%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm.o
+[ 98%] Linking CXX CFBundle shared module "PaffettiDubChords_artefacts/Release/AU/Paffetti Dub Chords.component/Contents/MacOS/Paffetti Dub Chords"
+[100%] Linking CXX CFBundle shared module "PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3/Contents/MacOS/Paffetti Dub Chords"
+[100%] Built target PaffettiDubChords_AU
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3: code object is not signed at all
+-- Replacing invalid signature with ad-hoc signature
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3: replacing existing signature
+removing moduleinfo.json
+creating /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3
+[100%] Built target PaffettiDubChords_VST3

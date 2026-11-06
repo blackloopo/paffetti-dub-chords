@@ -1,0 +1,3 @@
+commit 5bd7afb4d17acc7b9ebf79ab250bb888ebd8fb26
+configura=success compila=success firma=success
+auval=success pluginval=success zip=success
