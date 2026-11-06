@@ -20,21 +20,25 @@ jobs:
         run: git clone --depth 1 --branch 8.0.10 https://github.com/juce-framework/JUCE.git JUCE
 
       - name: Configura
+        id: cfg
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 2>&1 | tee log-configura.txt
 
       - name: Compila
+        id: build
         run: |
           set -o pipefail
           cmake --build build --config Release -j 3 2>&1 | tee log-compila.txt
 
       - name: Inserisci i sample e firma
+        id: sign
         run: |
           set -e
+          exec > >(tee log-firma.txt) 2>&1
           ART=build/PaffettiDubChords_artefacts/Release
-          python3 tools/make_pack.py Samples Samples.pdcpak
+          python3 tools/make_pack.py Samples Samples.pdcpak 2>&1 | tee log-pack.txt
           for B in "$ART/VST3/Paffetti Dub Chords.vst3" "$ART/AU/Paffetti Dub Chords.component"; do
             mkdir -p "$B/Contents/Resources"
             cp Samples.pdcpak "$B/Contents/Resources/Samples.pdcpak"
@@ -44,7 +48,9 @@ jobs:
           lipo -info "$ART/VST3/Paffetti Dub Chords.vst3/Contents/MacOS/Paffetti Dub Chords" | tee log-arch.txt
 
       - name: Test Apple auval (Audio Unit)
+        id: auval
         continue-on-error: true
+        timeout-minutes: 6
         run: |
           set -o pipefail
           mkdir -p ~/Library/Audio/Plug-Ins/Components
@@ -55,7 +61,9 @@ jobs:
           grep -q "AU VALIDATION SUCCEEDED" log-auval.txt
 
       - name: Test pluginval (VST3, apre anche l'interfaccia)
+        id: pluginval
         continue-on-error: true
+        timeout-minutes: 8
         run: |
           set -o pipefail
           curl -sSL -o pluginval.zip https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip
@@ -64,6 +72,7 @@ jobs:
             --timeout-ms 120000 "build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3" 2>&1 | tee log-pluginval.txt
 
       - name: Prepara lo zip
+        id: zip
         run: |
           set -e
           ART=build/PaffettiDubChords_artefacts/Release
@@ -76,13 +85,20 @@ jobs:
       - name: Pubblica sul ramo builds
         if: always()
         run: |
-          set -e
           mkdir -p out
-          cp log-*.txt out/ 2>/dev/null || true
-          [ -f Paffetti_Dub_Chords_mac.zip ] && cp Paffetti_Dub_Chords_mac.zip out/ || echo "zip non creato" > out/ERRORE.txt
-          echo "${{ github.sha }} ${{ job.status }}" > out/esito.txt
+          cp log-*.txt out/ 2>/dev/null
+          if [ -f Paffetti_Dub_Chords_mac.zip ]; then cp Paffetti_Dub_Chords_mac.zip out/; else echo "zip non creato" > out/ERRORE.txt; fi
+          {
+            echo "commit ${{ github.sha }}"
+            echo "configura=${{ steps.cfg.outcome }} compila=${{ steps.build.outcome }} firma=${{ steps.sign.outcome }}"
+            echo "auval=${{ steps.auval.outcome }} pluginval=${{ steps.pluginval.outcome }} zip=${{ steps.zip.outcome }}"
+          } > out/esito.txt
+          ls -la out
           cd out
           git init -q -b builds
           git config user.name "build-bot"; git config user.email "build-bot@users.noreply.github.com"
           git add -A && git commit -q -m "Build ${{ github.sha }}"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" builds
+          for t in 1 2 3; do
+            git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:builds && break
+            sleep 10
+          done
