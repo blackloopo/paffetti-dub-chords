@@ -80,6 +80,8 @@ jobs:
           cp -R "$ART/VST3/Paffetti Dub Chords.vst3" "pkg/Paffetti Dub Chords/"
           cp -R "$ART/AU/Paffetti Dub Chords.component" "pkg/Paffetti Dub Chords/"
           cp LEGGIMI.txt "pkg/Paffetti Dub Chords/"
+          rm -f "pkg/Paffetti Dub Chords/Paffetti Dub Chords.vst3/Contents/Resources/Samples.pdcpak"
+          rm -f "pkg/Paffetti Dub Chords/Paffetti Dub Chords.component/Contents/Resources/Samples.pdcpak"
           cd pkg && ditto -c -k --sequesterRsrc --keepParent "Paffetti Dub Chords" "../Paffetti_Dub_Chords_mac.zip"
 
       - name: Pubblica sul ramo builds
@@ -88,6 +90,8 @@ jobs:
           mkdir -p out
           cp log-*.txt out/ 2>/dev/null
           if [ -f Paffetti_Dub_Chords_mac.zip ]; then cp Paffetti_Dub_Chords_mac.zip out/; else echo "zip non creato" > out/ERRORE.txt; fi
+          [ -f Samples.pdcpak ] && cp Samples.pdcpak out/
+          shasum -a 256 Samples.pdcpak > out/pack.sha256 2>/dev/null
           {
             echo "commit ${{ github.sha }}"
             echo "configura=${{ steps.cfg.outcome }} compila=${{ steps.build.outcome }} firma=${{ steps.sign.outcome }}"

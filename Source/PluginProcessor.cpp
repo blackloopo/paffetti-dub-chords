@@ -5,10 +5,10 @@ using APVTS = juce::AudioProcessorValueTreeState;
 
 // ======================= voce =======================
 void StabVoice::start (std::shared_ptr<SampleData> s, int n, float velocity, double hostRate, float tune,
-                       const juce::ADSR::Parameters& env)
+                       const juce::ADSR::Parameters& env, const FilterFrame& ff)
 {
     sample = std::move (s);
-    note = n;
+    note = n; sr = hostRate;
     // il tasto con la stessa nota della fondamentale, nell'ottava di C3 (60-71), suona l'accordo all'altezza originale
     int home = 60 + (sample->rootMidi % 12);
     inc = std::pow (2.0, (n - home + tune) / 12.0) * sample->sourceRate / hostRate;
@@ -18,6 +18,13 @@ void StabVoice::start (std::shared_ptr<SampleData> s, int n, float velocity, dou
     adsr.setParameters (env);
     adsr.reset();
     adsr.noteOn();
+    // ogni colpo ha il suo filtro: un piccolo scarto casuale e l'inviluppo che riparte
+    randOff = (rnd.nextFloat() * 2.0f - 1.0f) * ff.randOct + (velocity - 0.75f) * 0.6f;
+    fEnv = 1.0f;
+    fEnvCoef = std::exp (-4.6f / (juce::jmax (0.01f, ff.envDecay) * (float) hostRate));
+    driftPh = rnd.nextFloat(); driftRate = 0.08f + 0.07f * rnd.nextFloat(); walk = walkTarget = 0;
+    for (int c = 0; c < 2; ++c) { f1[c].reset(); f2[c].reset(); }
+    ctr = 0;
     active = true; keyDown = true;
 }
 
@@ -28,28 +35,61 @@ void StabVoice::stop (bool allowTail)
     else { adsr.reset(); active = false; sample.reset(); }
 }
 
-void StabVoice::render (float* L, float* R, int n)
+void StabVoice::render (float* L, float* R, int n, const FilterFrame& ff, int lfoOffset)
 {
     if (! active || sample == nullptr) return;
     auto& b = sample->buffer;
     const float* sl = b.getReadPointer (0);
-    const float* sr = b.getReadPointer (1);
+    const float* srp = b.getReadPointer (1);
     const int len = b.getNumSamples() - 3;
+    const float fsr = (float) sr;
     for (int i = 0; i < n; ++i)
     {
         int ip = (int) pos;
         if (ip >= len) { active = false; break; }
         float f = (float) (pos - ip);
-        auto herm = [f] (const float* d, int k)
+        auto herm = [f] (const float* d, int kk)
         {
-            float y0 = d[juce::jmax (0, k - 1)], y1 = d[k], y2 = d[k + 1], y3 = d[k + 2];
+            float y0 = d[juce::jmax (0, kk - 1)], y1 = d[kk], y2 = d[kk + 1], y3 = d[kk + 2];
             float c1 = 0.5f * (y2 - y0), c2 = y0 - 2.5f * y1 + 2.0f * y2 - 0.5f * y3, c3 = 0.5f * (y3 - y0) + 1.5f * (y1 - y2);
             return ((c3 * f + c2) * f + c1) * f + y1;
         };
         float e = adsr.getNextSample() * gain;
-        L[i] += herm (sl, ip) * e;
-        R[i] += herm (sr, ip) * e;
-        pos += inc;
+        float l = herm (sl, ip), r = herm (srp, ip);
+
+        if (! ff.bypass)
+        {
+            fEnv *= fEnvCoef;
+            if ((ctr++ & 15) == 0)
+            {
+                float lfo = ff.lfo != nullptr ? ff.lfo[lfoOffset + i] : 0.0f;
+                float oct = ff.envOct * fEnv + ff.lfoOct * lfo + randOff;
+                float fc = juce::jlimit (30.0f, fsr * 0.45f, ff.cutoff * std::pow (2.0f, oct));
+                lastCutoff = fc;
+                g = dub::SVF::gFor (fc, fsr);
+                k = 2.0f - 1.92f * ff.reso;           // risonanza: k basso = picco alto
+            }
+            for (int c = 0; c < 2; ++c)
+            {
+                float x = c ? r : l;
+                float y = f1[c].process (x, g, k, ff.mode);
+                if (ff.mode == 0) y = f2[c].process (y, g, 1.414f, 0);   // passa-basso a 24 dB
+                if (c) r = y; else l = y;
+            }
+        }
+        L[i] += l * e;
+        R[i] += r * e;
+
+        double step = inc;
+        if (ff.drift > 0.001f)
+        {
+            driftPh += driftRate / fsr; if (driftPh >= 1.0f) driftPh -= 1.0f;
+            if ((ctr & 511) == 0) walkTarget = rnd.nextFloat() * 2.0f - 1.0f;
+            walk += 0.00002f * (walkTarget - walk);
+            float cents = ff.drift * (9.0f * std::sin (dub::twoPi * driftPh) + 6.0f * walk);
+            step *= std::pow (2.0, cents / 1200.0);
+        }
+        pos += step;
         if (! adsr.isActive()) { active = false; break; }
     }
     if (! active) sample.reset();
@@ -71,11 +111,26 @@ APVTS::ParameterLayout PaffettiProcessor::createLayout()
     add (std::make_unique<P> (juce::ParameterID { "decay", 1 }, "Decay", juce::NormalisableRange<float> (30.0f, 4000.0f, 0.0f, 0.4f), 4000.0f,
          A().withStringFromValueFunction ([] (float v, int) { return v >= 3990 ? juce::String ("FULL") : (v >= 1000 ? juce::String (v / 1000.0f, 2) + "s" : juce::String (juce::roundToInt (v)) + "ms"); })));
     add (std::make_unique<P> (juce::ParameterID { "release", 1 }, "Release", juce::NormalisableRange<float> (5.0f, 3000.0f, 0.0f, 0.4f), 250.0f, A().withStringFromValueFunction (ms)));
-    add (std::make_unique<P> (juce::ParameterID { "cutoff", 1 }, "Filter", juce::NormalisableRange<float> (80.0f, 20000.0f, 0.0f, 0.25f), 20000.0f, A().withStringFromValueFunction (hz)));
-    add (std::make_unique<P> (juce::ParameterID { "reso", 1 }, "Reso", juce::NormalisableRange<float> (0.0f, 0.9f), 0.0f, A().withStringFromValueFunction (pct)));
+    add (std::make_unique<P> (juce::ParameterID { "cutoff", 1 }, "Filter", juce::NormalisableRange<float> (60.0f, 20000.0f, 0.0f, 0.25f), 700.0f, A().withStringFromValueFunction (hz)));
+    add (std::make_unique<P> (juce::ParameterID { "reso", 1 }, "Reso", juce::NormalisableRange<float> (0.0f, 1.0f), 0.35f, A().withStringFromValueFunction (pct)));
     add (std::make_unique<P> (juce::ParameterID { "tune", 1 }, "Tune", juce::NormalisableRange<float> (-24.0f, 24.0f, 1.0f), 0.0f,
          A().withStringFromValueFunction ([] (float v, int) { return (v > 0 ? "+" : "") + juce::String ((int) v) + "st"; })));
     add (std::make_unique<C> (juce::ParameterID { "poly", 1 }, "Poly", juce::StringArray { "1", "4", "8" }, 2));
+
+    // DUB FILTER
+    add (std::make_unique<C> (juce::ParameterID { "fltMode", 1 }, "Filter Mode", juce::StringArray { "LP", "BP", "HP" }, 1));
+    add (std::make_unique<P> (juce::ParameterID { "fltEnv", 1 }, "Filter Env", juce::NormalisableRange<float> (0.0f, 1.0f), 0.45f, A().withStringFromValueFunction (pct)));
+    add (std::make_unique<P> (juce::ParameterID { "fltDecay", 1 }, "Filter Decay", juce::NormalisableRange<float> (20.0f, 2000.0f, 0.0f, 0.4f), 260.0f, A().withStringFromValueFunction (ms)));
+    add (std::make_unique<B> (juce::ParameterID { "lfoSync", 1 }, "LFO Sync", true));
+    add (std::make_unique<C> (juce::ParameterID { "lfoDiv", 1 }, "LFO Rate", filterLfoDivisions(), 5));
+    add (std::make_unique<P> (juce::ParameterID { "lfoHz", 1 }, "LFO Hz", juce::NormalisableRange<float> (0.01f, 8.0f, 0.0f, 0.3f), 0.2f,
+         A().withStringFromValueFunction ([] (float v, int) { return juce::String (v, 2) + "Hz"; })));
+    add (std::make_unique<P> (juce::ParameterID { "lfoDepth", 1 }, "LFO Depth", juce::NormalisableRange<float> (0.0f, 1.0f), 0.4f, A().withStringFromValueFunction (pct)));
+    add (std::make_unique<C> (juce::ParameterID { "lfoShape", 1 }, "LFO Shape", juce::StringArray { "SIN", "TRI", "RMP", "S&H" }, 0));
+    add (std::make_unique<P> (juce::ParameterID { "fltRand", 1 }, "Random", juce::NormalisableRange<float> (0.0f, 1.0f), 0.25f, A().withStringFromValueFunction (pct)));
+    add (std::make_unique<P> (juce::ParameterID { "drift", 1 }, "Drift", juce::NormalisableRange<float> (0.0f, 1.0f), 0.3f, A().withStringFromValueFunction (pct)));
+    add (std::make_unique<P> (juce::ParameterID { "dlySweep", 1 }, "Delay Sweep", juce::NormalisableRange<float> (0.0f, 1.0f), 0.0f, A().withStringFromValueFunction (pct)));
+    add (std::make_unique<C> (juce::ParameterID { "dlySweepDiv", 1 }, "Sweep Rate", juce::StringArray { "2", "8", "32" }, 1));
 
     add (std::make_unique<B> (juce::ParameterID { "dlySync", 1 }, "Delay Sync", true));
     add (std::make_unique<C> (juce::ParameterID { "dlyDiv", 1 }, "Delay Time", delayDivisions(), 3));
@@ -106,7 +161,7 @@ APVTS::ParameterLayout PaffettiProcessor::createLayout()
     add (std::make_unique<P> (juce::ParameterID { "spMix", 1 }, "Spring", juce::NormalisableRange<float> (0.0f, 1.0f), 0.2f, A().withStringFromValueFunction (pct)));
     add (std::make_unique<P> (juce::ParameterID { "spDecay", 1 }, "Spring Decay", juce::NormalisableRange<float> (0.2f, 0.85f), 0.55f, A().withStringFromValueFunction (pct)));
     add (std::make_unique<P> (juce::ParameterID { "sat", 1 }, "Saturation", juce::NormalisableRange<float> (0.0f, 1.0f), 0.25f, A().withStringFromValueFunction (pct)));
-    add (std::make_unique<P> (juce::ParameterID { "hiss", 1 }, "Hiss", juce::NormalisableRange<float> (0.0f, 1.0f), 0.0f, A().withStringFromValueFunction (pct)));
+    add (std::make_unique<P> (juce::ParameterID { "hiss", 1 }, "Hiss", juce::NormalisableRange<float> (0.0f, 1.0f), 0.12f, A().withStringFromValueFunction (pct)));
 
     add (std::make_unique<P> (juce::ParameterID { "low", 1 }, "Low", juce::NormalisableRange<float> (-12.0f, 12.0f), 0.0f, A().withStringFromValueFunction (db)));
     add (std::make_unique<P> (juce::ParameterID { "high", 1 }, "High", juce::NormalisableRange<float> (-12.0f, 12.0f), 0.0f, A().withStringFromValueFunction (db)));
@@ -118,8 +173,13 @@ PaffettiProcessor::PaffettiProcessor()
     : AudioProcessor (BusesProperties().withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
       apvts (*this, nullptr, "PARAMS", createLayout())
 {
-    auto entries = library.getEntries ("BC");
-    if (! entries.isEmpty()) selectSample ("BC", entries[0].name);
+    // si apre sulla prima categoria (MANGO) e sul primo stab
+    auto& cats = library.getCategories();
+    if (! cats.isEmpty())
+    {
+        auto entries = library.getEntries (cats[0].id);
+        if (! entries.isEmpty()) selectSample (cats[0].id, entries[0].name);
+    }
 }
 
 bool PaffettiProcessor::isBusesLayoutSupported (const BusesLayout& l) const
@@ -131,16 +191,13 @@ void PaffettiProcessor::prepareToPlay (double rate, int block)
 {
     sr = rate;
     work.setSize (2, block);
-    juce::dsp::ProcessSpec spec { rate, (juce::uint32) block, 2 };
-    ladder.prepare (spec);
-    ladder.setMode (juce::dsp::LadderFilterMode::LPF24);
-    ladder.setDrive (1.2f);
+    lfoBuf.assign ((size_t) juce::jmax (block, 4096), 0.0f);
+    sweepBuf.assign ((size_t) juce::jmax (block, 4096), 0.0f);
     phaser.prepare (rate); flanger.prepare (rate); tape.prepare (rate); spring.prepare (rate);
     for (auto& f : lowShelf) f.reset();
     for (auto& f : highShelf) f.reset();
     lastLow = lastHigh = 999;
     volume.reset (rate, 0.05); volume.setCurrentAndTargetValue (juce::Decibels::decibelsToGain (apvts.getRawParameterValue ("volume")->load()));
-    cutoffSm.reset (rate, 0.03); cutoffSm.setCurrentAndTargetValue (apvts.getRawParameterValue ("cutoff")->load());
     for (auto& v : voices) v.stop (false);
 }
 
@@ -154,6 +211,24 @@ juce::ADSR::Parameters PaffettiProcessor::currentEnv() const
     p.sustain = dec >= 3990 ? 1.0f : 0.0f;
     p.release = g ("release") / 1000.0f;
     return p;
+}
+
+FilterFrame PaffettiProcessor::makeFrame()
+{
+    auto g = [this] (const char* id) { return apvts.getRawParameterValue (id)->load(); };
+    FilterFrame f;
+    f.mode = (int) g ("fltMode");
+    f.cutoff = g ("cutoff");
+    f.reso = g ("reso");
+    f.envOct = g ("fltEnv") * 5.0f;
+    f.envDecay = g ("fltDecay") / 1000.0f;
+    f.lfoOct = g ("lfoDepth") * 3.0f;
+    f.randOct = g ("fltRand") * 1.2f;
+    f.drift = g ("drift");
+    f.lfo = lfoBuf.data();
+    // filtro tutto aperto e senza modulazioni: passa il sample com'è
+    f.bypass = (f.mode == 0 && f.cutoff >= 19000.0f && f.envOct < 0.01f && f.lfoOct < 0.01f && f.reso < 0.05f);
+    return f;
 }
 
 std::shared_ptr<SampleData> PaffettiProcessor::getCurrentSample() const
@@ -189,7 +264,7 @@ void PaffettiProcessor::handleMidi (const juce::MidiMessage& m)
             else oldest->stop (true);
         }
         target->age = ++voiceCounter;
-        target->start (s, m.getNoteNumber(), m.getFloatVelocity(), sr, apvts.getRawParameterValue ("tune")->load(), currentEnv());
+        target->start (s, m.getNoteNumber(), m.getFloatVelocity(), sr, apvts.getRawParameterValue ("tune")->load(), currentEnv(), makeFrame());
         lastNote = m.getNoteNumber();
     }
     else if (m.isNoteOff())
@@ -206,7 +281,7 @@ double PaffettiProcessor::divToBeats (const juce::String& d)
 {
     if (d == "1/16") return 0.25;  if (d == "1/8T") return 1.0 / 3.0; if (d == "1/8") return 0.5;
     if (d == "3/16") return 0.75;  if (d == "1/4T") return 2.0 / 3.0; if (d == "1/4") return 1.0;
-    if (d == "3/8") return 1.5;    if (d == "1/2") return 2.0;
+    if (d == "3/8") return 1.5;    if (d == "1/2") return 2.0;    if (d == "32 bar") return 128.0;
     if (d == "1 bar") return 4.0;  if (d == "2 bar") return 8.0; if (d == "4 bar") return 16.0;
     if (d == "8 bar") return 32.0; if (d == "16 bar") return 64.0;
     return 1.0;
@@ -236,34 +311,58 @@ void PaffettiProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     buffer.clear();
     float* L = buffer.getWritePointer (0);
     float* R = buffer.getWritePointer (1);
+    if ((int) lfoBuf.size() < n) { lfoBuf.resize ((size_t) n); sweepBuf.resize ((size_t) n); }
+
+    // LFO del DUB FILTER: a tempo (fase agganciata al progetto) o libero
+    {
+        bool sync = g ("lfoSync") > 0.5f;
+        double beats = divToBeats (filterLfoDivisions()[(int) g ("lfoDiv")]);
+        double hz = sync ? (bpm / 60.0) / beats : (double) g ("lfoHz");
+        if (sync && playing) { double cyc = ppq / beats; filterLfo.phase = cyc - std::floor (cyc); }
+        int shape = (int) g ("lfoShape");
+        for (int i = 0; i < n; ++i)
+        {
+            double p = filterLfo.phase; float v;
+            switch (shape)
+            {
+                case 1: v = p < 0.5 ? (float) (4 * p - 1) : (float) (3 - 4 * p); break;
+                case 2: v = (float) (1 - 2 * p); break;
+                case 3:
+                {
+                    double cyc = std::floor (filterLfo.phase * 4.0);   // random a gradini, 4 per ciclo
+                    if (cyc != lastShCycle) { shValue = lfoRnd.nextFloat() * 2.0f - 1.0f; lastShCycle = cyc; }
+                    v = shValue; break;
+                }
+                default: v = std::sin (dub::twoPi * (float) p);
+            }
+            lfoBuf[(size_t) i] = v;
+            filterLfo.advance (hz, sr);
+        }
+        displayLfo = lfoBuf[(size_t) (n - 1)];
+        // sweep del delay: LFO lento a tempo (2, 8 o 32 battute)
+        static const double sweepBars[] = { 2.0, 8.0, 32.0 };
+        double sb = sweepBars[(int) g ("dlySweepDiv")] * 4.0;
+        if (playing) { double cyc = ppq / sb; sweepLfo.phase = cyc - std::floor (cyc); }
+        for (int i = 0; i < n; ++i) { sweepBuf[(size_t) i] = std::sin (dub::twoPi * (float) sweepLfo.phase); sweepLfo.advance ((bpm / 60.0) / sb, sr); }
+    }
+    auto frame = makeFrame();
 
     // voci, spezzate sugli eventi MIDI
     int cursor = 0;
     for (const auto meta : midi)
     {
         int at = juce::jlimit (0, n, meta.samplePosition);
-        for (auto& v : voices) v.render (L + cursor, R + cursor, at - cursor);
+        for (auto& v : voices) v.render (L + cursor, R + cursor, at - cursor, frame, cursor);
         cursor = at;
         handleMidi (meta.getMessage());
     }
-    for (auto& v : voices) v.render (L + cursor, R + cursor, n - cursor);
+    for (auto& v : voices) v.render (L + cursor, R + cursor, n - cursor, frame, cursor);
     midi.clear();
-
-    // filtro
-    cutoffSm.setTargetValue (g ("cutoff"));
-    float reso = g ("reso");
-    if (cutoffSm.getTargetValue() < 19500.0f || reso > 0.01f || cutoffSm.isSmoothing())
     {
-        ladder.setResonance (reso);
-        const int sub = 32;
-        for (int i = 0; i < n; i += sub)
-        {
-            int m = juce::jmin (sub, n - i);
-            ladder.setCutoffFrequencyHz (juce::jmin (cutoffSm.skip (m), (float) (sr * 0.45)));
-            float* chans[2] = { L + i, R + i };
-            juce::dsp::AudioBlock<float> blk (chans, 2, (size_t) m);
-            ladder.process (juce::dsp::ProcessContextReplacing<float> (blk));
-        }
+        float fcShow = frame.bypass ? 20000.0f : frame.cutoff * std::pow (2.0f, frame.lfoOct * lfoBuf[(size_t) (n - 1)]);
+        juce::uint64 newest = 0;
+        for (auto& v : voices) if (v.isActive() && v.age >= newest && ! frame.bypass) { newest = v.age; fcShow = v.lastCutoff; }
+        displayCutoff = fcShow;
     }
 
     auto lfoRate = [&] (const char* syncId, const char* divId, const char* hzId, juce::StringArray divs)
@@ -296,7 +395,8 @@ void PaffettiProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
     // tape delay: sempre in funzione (le code continuano anche abbassando il mix)
     {
         double secs = g ("dlySync") > 0.5f ? divToBeats (delayDivisions()[(int) g ("dlyDiv")]) * 60.0 / bpm : g ("dlyMs") / 1000.0;
-        tape.process (L, R, n, (float) (secs * sr), g ("dlyFeed"), g ("dlyWow"), g ("dlyTone"), g ("dlyMix"), g ("dlyPing") > 0.5f);
+        tape.process (L, R, n, (float) (secs * sr), g ("dlyFeed"), g ("dlyWow"), g ("dlyTone"), g ("dlyMix"), g ("dlyPing") > 0.5f,
+                      g ("dlySweep"), sweepBuf.data());
     }
 
     if (g ("spMix") > 0.001f) spring.process (L, R, n, g ("spDecay"), g ("spMix"));

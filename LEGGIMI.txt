@@ -1,9 +1,9 @@
-PAFFETTI DUB CHORDS  v0.1.1
+PAFFETTI DUB CHORDS  v0.2
 Powered by Black Loops
 
 Sampler di stab dub techno: ogni tasto suona un accordo completo.
-250 stab in 6 categorie (Basic Channel, Maurizio, Rhythm & Sound,
-Chain Reaction, Swayzak, Grit 12 bit) + la tua cartella "I miei sample".
+290 stab in 9 categorie (Mango, Basic Channel, Woompf, Phylyps, Maurizio,
+Rhythm & Sound, Chain Reaction, Swayzak, Moving) + la tua cartella "I miei sample".
 
 INSTALLAZIONE
 1. Copia "Paffetti Dub Chords.vst3" nella cartella:
@@ -26,7 +26,10 @@ COME SI SUONA
 - C3 suona l'accordo alla sua altezza originale; gli altri tasti lo traspongono.
 - Clicca le categorie sullo schermo, la rotella scorre la lista, < > cambiano stab.
 - Doppio clic su una manopola = valore iniziale.
-- SYNC acceso: il delay, il phaser e il flanger seguono il tempo del progetto.
+- DUB FILTER: ogni colpo ha il suo filtro (LP/BP/HP), con inviluppo, RANDOM e LFO a tempo.
+  È lui che dà il movimento: prova BP, CUTOFF intorno a 700, LFO 4 bar, DEPTH 40%.
+- SYNC acceso: LFO, delay, phaser e flanger seguono il tempo del progetto.
+- SWEEP nel TAPE DELAY: un filtro che si apre e si chiude dentro le ripetizioni (2/8/32 battute).
 - + MIEI SAMPLE: scegli una cartella con i tuoi WAV/AIFF/FLAC. Se nel nome c'è la
   tonalità (es. "Cm7", "F#min") il plugin la riconosce, altrimenti C3 = altezza originale.
 

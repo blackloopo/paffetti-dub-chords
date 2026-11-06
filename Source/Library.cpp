@@ -179,7 +179,7 @@ std::shared_ptr<SampleData> Library::load (const LibraryEntry& e)
         if (! in.openedOk() || ! in.setPosition (e.packOffset)) return nullptr;
         juce::MemoryBlock mb;
         in.readIntoMemoryBlock (mb, (ssize_t) e.packSize);
-        r.reset (formats.createReaderFor (std::make_unique<juce::MemoryInputStream> (std::move (mb), false)));
+        r.reset (formats.createReaderFor (std::make_unique<juce::MemoryInputStream> (mb, true)));
     }
     else
         r.reset (formats.createReaderFor (e.file));

@@ -89,7 +89,7 @@ private:
     juce::Array<LibraryEntry> entries;
     int scroll = 0; int blink = 0; int seenVersion = -1;
     juce::Array<float> wave;
-    static constexpr int rows = 7;
+    static constexpr int rows = 13;
 };
 
 class KeyboardView : public juce::Component, private juce::Timer
@@ -125,6 +125,18 @@ private:
     PaffettiProcessor& proc;
 };
 
+// schermino che disegna il filtro che si muove
+class FilterScope : public juce::Component, private juce::Timer
+{
+public:
+    explicit FilterScope (PaffettiProcessor& p) : proc (p) { hist.insertMultiple (0, 0.5f, 96); startTimerHz (30); }
+    void paint (juce::Graphics&) override;
+private:
+    void timerCallback() override;
+    PaffettiProcessor& proc;
+    juce::Array<float> hist;
+};
+
 class MainPanel : public juce::Component, private juce::Timer
 {
 public:
@@ -136,11 +148,12 @@ private:
     PaffettiProcessor& proc;
     CRTScreen screen;
     PixelButton prevB { "<", pal::yellow }, nextB { ">", pal::yellow }, randB { "RANDOM", pal::green }, mineB { "+ MIEI SAMPLE", pal::aqua };
-    Section sStab { "STAB", pal::yellow }, sDelay { "TAPE DELAY", pal::orange }, sPhaser { "PHASER", pal::red },
+    Section sStab { "STAB", pal::yellow }, sDelay { "TAPE DELAY", pal::orange }, sFilter { "DUB FILTER", pal::green }, sPhaser { "PHASER", pal::red },
             sFlanger { "FLANGER", pal::aqua }, sSpring { "SPRING + TAPE", pal::green }, sOut { "OUTPUT", pal::cream };
     juce::OwnedArray<Knob> knobs;
-    Knob *dlyDiv, *dlyMs, *phDiv, *phHz, *flDiv, *flHz;
-    PixelChoice dlySync, dlyPing, phSync, phStages, flSync, poly;
+    Knob *dlyDiv, *dlyMs, *phDiv, *phHz, *flDiv, *flHz, *lfoDiv, *lfoHz;
+    PixelChoice dlySync, dlyPing, dlySweepDiv, phSync, phStages, flSync, poly, fltMode, lfoShape, lfoSync;
+    FilterScope scope;
     Meter meter;
     KeyboardView keyboard;
     std::unique_ptr<juce::FileChooser> chooser;
@@ -154,7 +167,7 @@ public:
     ~PaffettiEditor() override;
     void paint (juce::Graphics&) override;
     void resized() override;
-    static constexpr int W = 1120, H = 640;
+    static constexpr int W = 1120, H = 780;
 private:
     RetroLNF lnf;
     MainPanel panel;

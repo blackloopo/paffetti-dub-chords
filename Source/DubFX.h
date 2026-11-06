@@ -38,6 +38,27 @@ struct OnePole
     void reset() { z = 0; }
 };
 
+// filtro a variabili di stato (TPT) con saturazione: LP / BP / HP
+struct SVF
+{
+    float ic1 = 0, ic2 = 0;
+    void reset() { ic1 = ic2 = 0; }
+    // mode: 0 LP, 1 BP, 2 HP
+    inline float process (float x, float g, float k, int mode)
+    {
+        float a1 = 1.0f / (1.0f + g * (g + k)), a2 = g * a1, a3 = g * a2;
+        float v3 = x - ic2;
+        float v1 = a1 * ic1 + a2 * v3;
+        float v2 = ic2 + a2 * ic1 + a3 * v3;
+        ic1 = 2.0f * v1 - ic1; ic2 = 2.0f * v2 - ic2;
+        ic1 = std::tanh (ic1 * 0.9f) / 0.9f;            // un filo di saturazione analogica nello stato
+        if (mode == 0) return v2;
+        if (mode == 1) return v1 * k;                   // passa-banda a guadagno costante
+        return x - k * v1 - v2;
+    }
+    static inline float gFor (float fc, float sr) { return std::tan (juce::MathConstants<float>::pi * juce::jlimit (20.0f, sr * 0.45f, fc) / sr); }
+};
+
 // LFO sincronizzabile: fase da ppq se il trasporto è in play
 struct LFO
 {
@@ -121,15 +142,18 @@ struct TapeDelay
     float sr = 44100;
     DelayLine d[2];
     OnePole hp[2], lp1[2], lp2[2];
+    SVF sweepF[2];
     float curDelay = 0; bool first = true;
     double t = 0;
     juce::Random rnd;
     float drift = 0, driftTarget = 0;
 
     void prepare (double s) { sr = (float) s; for (auto& x : d) x.prepare ((int) (sr * 4.0f)); reset(); }
-    void reset() { for (auto& x : d) x.clear(); for (int c = 0; c < 2; ++c) { hp[c].reset(); lp1[c].reset(); lp2[c].reset(); } first = true; }
+    void reset() { for (auto& x : d) x.clear(); for (int c = 0; c < 2; ++c) { hp[c].reset(); lp1[c].reset(); lp2[c].reset(); sweepF[c].reset(); } first = true; }
 
-    void process (float* L, float* R, int n, float delaySamples, float feedback, float wow, float toneHz, float mix, bool pingPong)
+    // sweepAmt 0..1: un passa-banda che si muove nel feedback (la mandata "dub" che si apre e si chiude)
+    void process (float* L, float* R, int n, float delaySamples, float feedback, float wow, float toneHz, float mix, bool pingPong,
+                  float sweepAmt = 0.0f, const float* sweepLfo = nullptr)
     {
         delaySamples = juce::jlimit (8.0f, sr * 3.9f, delaySamples);
         if (first) { curDelay = delaySamples; first = false; }
@@ -146,9 +170,16 @@ struct TapeDelay
                              + sr * 0.0006f * drift);
             float yl = d[0].read (curDelay + mod + 2.0f);
             float yr = d[1].read (curDelay * (pingPong ? 1.0f : 1.012f) + mod + 2.0f);
+            float sw = sweepLfo != nullptr ? sweepLfo[i] : 0.0f;
+            float bpG = SVF::gFor (toneHz * 0.45f * std::pow (2.0f, 2.2f * sw), sr);
             auto shape = [&] (int c, float y)
             {
                 y = hp[c].hp (y); y = lp2[c].lp (lp1[c].lp (y));
+                if (sweepAmt > 0.001f)
+                {
+                    float b = sweepF[c].process (y, bpG, 0.7f, 1);
+                    y = y + sweepAmt * (b * 1.6f - y);
+                }
                 return std::tanh (y * 1.4f) / 1.4f;          // saturazione del nastro nel loop
             };
             float fl = shape (0, yl), fr = shape (1, yr);

@@ -414,18 +414,52 @@ void KeyboardView::mouseUp (const juce::MouseEvent&)
     mouseNote = -1;
 }
 
+// ======================= scope del filtro =======================
+void FilterScope::timerCallback()
+{
+    float fc = proc.displayCutoff.load();
+    float v = juce::jlimit (0.0f, 1.0f, (std::log2 (juce::jmax (40.0f, fc)) - std::log2 (40.0f)) / (std::log2 (16000.0f) - std::log2 (40.0f)));
+    hist.remove (0); hist.add (v);
+    repaint();
+}
+
+void FilterScope::paint (juce::Graphics& g)
+{
+    auto r = getLocalBounds().toFloat();
+    g.setColour (pal::screen); g.fillRoundedRectangle (r, 6.0f);
+    g.setColour (pal::rim); g.drawRoundedRectangle (r.reduced (1.0f), 6.0f, 2.0f);
+    auto in = r.reduced (8.0f, 8.0f);
+    float px = in.getWidth() / (float) hist.size();
+    for (int i = 0; i < hist.size(); ++i)
+    {
+        float y = in.getBottom() - hist[i] * in.getHeight();
+        g.setColour ((i == hist.size() - 1 ? pal::yellow : pal::aqua).withAlpha (0.35f + 0.65f * (float) i / (float) hist.size()));
+        g.fillRect (juce::Rectangle<float> (in.getX() + i * px, y - 1.5f, juce::jmax (2.0f, px), 3.0f));
+    }
+    g.setColour (juce::Colours::black.withAlpha (0.25f));
+    for (int yy = 0; yy < getHeight(); yy += 3) g.fillRect (0, yy, getWidth(), 1);
+    float fc = proc.displayCutoff.load();
+    auto txt = fc >= 19000 ? juce::String ("OPEN") : (fc >= 1000 ? juce::String (fc / 1000.0f, 1) + "k" : juce::String (juce::roundToInt (fc)));
+    g.setFont (RetroFonts::pixel (7.0f)); g.setColour (pal::yellow);
+    g.drawText ("CUTOFF " + txt, getLocalBounds().reduced (8, 6), juce::Justification::topRight);
+}
+
 // ======================= pannello principale =======================
 MainPanel::MainPanel (PaffettiProcessor& p)
     : proc (p), screen (p),
       dlySync (p.apvts, "dlySync", { "SYNC" }),
       dlyPing (p.apvts, "dlyPing", { "PING" }),
+      dlySweepDiv (p.apvts, "dlySweepDiv", { "2", "8", "32" }),
       phSync (p.apvts, "phSync", { "SYNC" }),
       phStages (p.apvts, "phStages", { "4", "8", "12" }),
       flSync (p.apvts, "flSync", { "SYNC" }),
       poly (p.apvts, "poly", { "1", "4", "8" }),
-      meter (p), keyboard (p)
+      fltMode (p.apvts, "fltMode", { "LP", "BP", "HP" }),
+      lfoShape (p.apvts, "lfoShape", { "SIN", "TRI", "RMP", "S&H" }),
+      lfoSync (p.apvts, "lfoSync", { "SYNC" }),
+      scope (p), meter (p), keyboard (p)
 {
-    for (auto* s : { &sStab, &sDelay, &sPhaser, &sFlanger, &sSpring, &sOut }) addAndMakeVisible (s);
+    for (auto* s : { &sStab, &sDelay, &sFilter, &sPhaser, &sFlanger, &sSpring, &sOut }) addAndMakeVisible (s);
     addAndMakeVisible (screen);
     for (auto* b : { &prevB, &nextB, &randB, &mineB }) addAndMakeVisible (b);
     prevB.onClick = [this] { screen.step (-1); };
@@ -449,9 +483,12 @@ MainPanel::MainPanel (PaffettiProcessor& p)
         return k;
     };
     mk (sStab, "attack", "ATTACK"); mk (sStab, "decay", "DECAY"); mk (sStab, "release", "REL");
-    mk (sStab, "cutoff", "FILTER"); mk (sStab, "reso", "RESO"); mk (sStab, "tune", "TUNE");
+    mk (sStab, "tune", "TUNE"); mk (sStab, "drift", "DRIFT");
     dlyDiv = mk (sDelay, "dlyDiv", "TIME"); dlyMs = mk (sDelay, "dlyMs", "TIME");
-    mk (sDelay, "dlyFeed", "FEED"); mk (sDelay, "dlyWow", "WOW"); mk (sDelay, "dlyTone", "TONE"); mk (sDelay, "dlyMix", "MIX");
+    mk (sDelay, "dlyFeed", "FEED"); mk (sDelay, "dlyWow", "WOW"); mk (sDelay, "dlyTone", "TONE"); mk (sDelay, "dlySweep", "SWEEP"); mk (sDelay, "dlyMix", "MIX");
+    mk (sFilter, "cutoff", "CUTOFF"); mk (sFilter, "reso", "RESO"); mk (sFilter, "fltEnv", "ENV"); mk (sFilter, "fltDecay", "E.DEC");
+    mk (sFilter, "fltRand", "RANDOM");
+    lfoDiv = mk (sFilter, "lfoDiv", "LFO"); lfoHz = mk (sFilter, "lfoHz", "LFO"); mk (sFilter, "lfoDepth", "DEPTH");
     phDiv = mk (sPhaser, "phDiv", "RATE"); phHz = mk (sPhaser, "phHz", "RATE");
     mk (sPhaser, "phDepth", "DEPTH"); mk (sPhaser, "phFeed", "FEED"); mk (sPhaser, "phMix", "MIX");
     flDiv = mk (sFlanger, "flDiv", "RATE"); flHz = mk (sFlanger, "flHz", "RATE");
@@ -459,7 +496,8 @@ MainPanel::MainPanel (PaffettiProcessor& p)
     mk (sSpring, "spMix", "SPRING"); mk (sSpring, "spDecay", "DECAY"); mk (sSpring, "sat", "SATUR"); mk (sSpring, "hiss", "HISS");
     mk (sOut, "low", "LOW"); mk (sOut, "high", "HIGH"); mk (sOut, "volume", "VOLUME");
 
-    sDelay.addAndMakeVisible (dlySync); sDelay.addAndMakeVisible (dlyPing);
+    sDelay.addAndMakeVisible (dlySync); sDelay.addAndMakeVisible (dlyPing); sDelay.addAndMakeVisible (dlySweepDiv);
+    sFilter.addAndMakeVisible (fltMode); sFilter.addAndMakeVisible (lfoShape); sFilter.addAndMakeVisible (lfoSync); sFilter.addAndMakeVisible (scope);
     sPhaser.addAndMakeVisible (phSync); sPhaser.addAndMakeVisible (phStages);
     sFlanger.addAndMakeVisible (flSync);
     sOut.addAndMakeVisible (meter);
@@ -475,6 +513,7 @@ void MainPanel::timerCallback()
     dlyDiv->setVisible (on ("dlySync")); dlyMs->setVisible (! on ("dlySync"));
     phDiv->setVisible (on ("phSync"));   phHz->setVisible (! on ("phSync"));
     flDiv->setVisible (on ("flSync"));   flHz->setVisible (! on ("flSync"));
+    lfoDiv->setVisible (on ("lfoSync")); lfoHz->setVisible (! on ("lfoSync"));
 
     auto bt = "SYNC " + juce::String (proc.hostBpm.load(), 1);
     juce::String ct;
@@ -523,62 +562,81 @@ void MainPanel::paint (juce::Graphics& g)
     pixelText (g, bpmText, { 936, 26, 170, 16 }, 8.0f, pal::green);
 
     // cornice dello schermo
-    auto frame = juce::Rectangle<int> (18, 84, 430, 392);
+    auto frame = juce::Rectangle<int> (18, 84, 430, 526);
     g.setColour (pal::red); g.fillRect (frame.expanded (3));
     g.setColour (pal::edge); g.fillRect (frame);
     g.setColour (juce::Colour (0xff6b3d18)); g.drawRect (frame.reduced (2), 3);
 
     // area tastiera
-    pixelText (g, "TASTO = ACCORDO", { 18, 512, 140, 12 }, 7.0f, pal::tan);
+    pixelText (g, "TASTO = ACCORDO", { 18, 652, 140, 12 }, 7.0f, pal::tan);
     g.setFont (RetroFonts::vt (22.0f)); g.setColour (pal::yellow);
-    g.drawFittedText (chordText, { 18, 528, 136, 44 }, juce::Justification::topLeft, 2);
-    pixelText (g, "POLY", { 1040, 556, 60, 12 }, 7.0f, pal::tan, juce::Justification::centredRight);
-    pixelText (g, "v0.1.1", { 1040, 610, 60, 12 }, 6.0f, pal::rim.brighter (0.5f), juce::Justification::centredRight);
+    g.drawFittedText (chordText, { 18, 668, 136, 44 }, juce::Justification::topLeft, 2);
+    pixelText (g, "POLY", { 1040, 696, 60, 12 }, 7.0f, pal::tan, juce::Justification::centredRight);
+    pixelText (g, "v0.2", { 1040, 752, 60, 12 }, 6.0f, pal::rim.brighter (0.5f), juce::Justification::centredRight);
 }
 
 void MainPanel::resized()
 {
-    screen.setBounds (30, 96, 406, 316);
-    prevB.setBounds (30, 424, 40, 36); nextB.setBounds (76, 424, 40, 36); randB.setBounds (122, 424, 84, 36);
-    mineB.setBounds (300, 424, 136, 36);
+    screen.setBounds (30, 96, 406, 452);
+    prevB.setBounds (30, 560, 40, 36); nextB.setBounds (76, 560, 40, 36); randB.setBounds (122, 560, 84, 36);
+    mineB.setBounds (300, 560, 136, 36);
 
-    const int gx = 462, gy = 84, cw = 315, gap = 10;
-    sStab.setBounds   (gx,            gy,       cw, 124);
-    sDelay.setBounds  (gx + cw + gap, gy,       cw, 124);
-    sPhaser.setBounds (gx,            gy + 134, cw, 124);
-    sFlanger.setBounds(gx + cw + gap, gy + 134, cw, 124);
-    sSpring.setBounds (gx,            gy + 268, cw, 124);
-    sOut.setBounds    (gx + cw + gap, gy + 268, cw, 124);
+    const int gx = 462, gy = 84, cw = 315, gap = 10, rh = 124, rs = 134;
+    sStab.setBounds    (gx,            gy,          cw, rh);
+    sDelay.setBounds   (gx + cw + gap, gy,          cw, rh);
+    sFilter.setBounds  (gx,            gy + rs,     cw * 2 + gap, rh);
+    sPhaser.setBounds  (gx,            gy + rs * 2, cw, rh);
+    sFlanger.setBounds (gx + cw + gap, gy + rs * 2, cw, rh);
+    sSpring.setBounds  (gx,            gy + rs * 3, cw, rh);
+    sOut.setBounds     (gx + cw + gap, gy + rs * 3, cw, rh);
 
-    auto placeRow = [] (Section& s, std::initializer_list<Knob*> ks, int y)
+    auto knobsOf = [this] (Section& s) { juce::Array<Knob*> a; for (auto* k : knobs) if (k->getParentComponent() == &s) a.add (k); return a; };
+    auto row = [] (juce::Array<Knob*> ks, int x0, int step, int y)
     {
-        int x = 12;
-        for (auto* k : ks) { k->setBounds (x, y, 48, 78); x += 49; }
+        int x = x0;
+        for (auto* k : ks) { k->setBounds (x, y, 48, 78); x += step; }
     };
-    auto byLabel = [this] (Section& s, int idx) { int c = 0; for (auto* k : knobs) if (k->getParentComponent() == &s) { if (c == idx) return k; ++c; } return (Knob*) nullptr; };
+    row (knobsOf (sStab), 12, 58, 38);
 
-    placeRow (sStab, { byLabel (sStab, 0), byLabel (sStab, 1), byLabel (sStab, 2), byLabel (sStab, 3), byLabel (sStab, 4), byLabel (sStab, 5) }, 38);
-    // delay: TIME (div/ms sovrapposti) + 4
+    // delay: TIME (div e ms sovrapposti) + 5 manopole
     dlyDiv->setBounds (12, 38, 48, 78); dlyMs->setBounds (12, 38, 48, 78);
-    { int x = 61; for (int i = 2; i < 6; ++i) { byLabel (sDelay, i)->setBounds (x, 38, 48, 78); x += 49; } }
-    dlySync.setBounds (sDelay.getWidth() - 12 - dlySync.preferredWidth() - dlyPing.preferredWidth() - 8, 12, dlySync.preferredWidth(), 20);
-    dlyPing.setBounds (sDelay.getWidth() - 12 - dlyPing.preferredWidth(), 12, dlyPing.preferredWidth(), 20);
+    { auto ks = knobsOf (sDelay); int x = 61; for (int i = 2; i < ks.size(); ++i) { ks[i]->setBounds (x, 38, 48, 78); x += 49; } }
+    {
+        int w3 = dlySweepDiv.preferredWidth(), w2 = dlyPing.preferredWidth(), w1 = dlySync.preferredWidth();
+        int x = sDelay.getWidth() - 12 - w3; dlySweepDiv.setBounds (x, 12, w3, 20);
+        x -= 6 + w2; dlyPing.setBounds (x, 12, w2, 20);
+        x -= 6 + w1; dlySync.setBounds (x, 12, w1, 20);
+    }
+
+    // dub filter: 6 manopole + LFO (div/hz sovrapposti) + scope
+    {
+        auto ks = knobsOf (sFilter);   // cutoff, reso, env, e.dec, random, lfoDiv, lfoHz, depth
+        int x = 12;
+        for (int i = 0; i < 5; ++i) { ks[i]->setBounds (x, 38, 48, 78); x += 56; }
+        lfoDiv->setBounds (x, 38, 48, 78); lfoHz->setBounds (x, 38, 48, 78); x += 56;
+        ks[7]->setBounds (x, 38, 48, 78); x += 64;
+        scope.setBounds (x, 40, sFilter.getWidth() - x - 14, 72);
+        int w3 = lfoSync.preferredWidth(), w2 = lfoShape.preferredWidth(), w1 = fltMode.preferredWidth();
+        int cx = sFilter.getWidth() - 12 - w3; lfoSync.setBounds (cx, 12, w3, 20);
+        cx -= 8 + w2; lfoShape.setBounds (cx, 12, w2, 20);
+        cx -= 14 + w1; fltMode.setBounds (cx, 12, w1, 20);
+    }
 
     phDiv->setBounds (12, 38, 48, 78); phHz->setBounds (12, 38, 48, 78);
-    { int x = 61; for (int i = 2; i < 5; ++i) { byLabel (sPhaser, i)->setBounds (x, 38, 48, 78); x += 49; } }
+    { auto ks = knobsOf (sPhaser); int x = 61; for (int i = 2; i < ks.size(); ++i) { ks[i]->setBounds (x, 38, 48, 78); x += 49; } }
     phSync.setBounds (sPhaser.getWidth() - 12 - phSync.preferredWidth() - phStages.preferredWidth() - 8, 12, phSync.preferredWidth(), 20);
     phStages.setBounds (sPhaser.getWidth() - 12 - phStages.preferredWidth(), 12, phStages.preferredWidth(), 20);
 
     flDiv->setBounds (12, 38, 48, 78); flHz->setBounds (12, 38, 48, 78);
-    { int x = 61; for (int i = 2; i < 5; ++i) { byLabel (sFlanger, i)->setBounds (x, 38, 48, 78); x += 49; } }
+    { auto ks = knobsOf (sFlanger); int x = 61; for (int i = 2; i < ks.size(); ++i) { ks[i]->setBounds (x, 38, 48, 78); x += 49; } }
     flSync.setBounds (sFlanger.getWidth() - 12 - flSync.preferredWidth(), 12, flSync.preferredWidth(), 20);
 
-    placeRow (sSpring, { byLabel (sSpring, 0), byLabel (sSpring, 1), byLabel (sSpring, 2), byLabel (sSpring, 3) }, 38);
-    placeRow (sOut, { byLabel (sOut, 0), byLabel (sOut, 1), byLabel (sOut, 2) }, 38);
+    row (knobsOf (sSpring), 12, 49, 38);
+    row (knobsOf (sOut), 12, 49, 38);
     meter.setBounds (200, 48, 90, 62);
 
-    keyboard.setBounds (166, 492, 856, 134);
-    poly.setBounds (1100 - poly.preferredWidth(), 574, poly.preferredWidth(), 20);
+    keyboard.setBounds (166, 632, 856, 134);
+    poly.setBounds (1100 - poly.preferredWidth(), 714, poly.preferredWidth(), 20);
 }
 
 // ======================= editor =======================
