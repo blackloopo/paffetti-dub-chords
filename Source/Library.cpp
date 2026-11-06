@@ -3,7 +3,8 @@
 Library::Library()
 {
     formats.registerBasicFormats();
-    factoryFolder = locateFactoryFolder();
+    packFile = locatePack();
+    factoryFolder = packFile.existsAsFile() ? packFile.getParentDirectory() : locateFactoryFolder();
     scanFactory();
 }
 
@@ -26,12 +27,45 @@ juce::File Library::locateFactoryFolder()
     return {};
 }
 
+// Samples.pdcpak: "PDCPAK1\n" + lunghezza indice (8 byte) + indice JSON + dati FLAC uno dopo l'altro
+juce::File Library::locatePack()
+{
+    auto env = juce::SystemStats::getEnvironmentVariable ("PDC_PACK", {});
+    if (env.isNotEmpty() && juce::File (env).existsAsFile()) return juce::File (env);
+    auto f = juce::File::getSpecialLocation (juce::File::currentExecutableFile);
+    for (int i = 0; i < 6; ++i)
+    {
+        f = f.getParentDirectory();
+        auto c1 = f.getChildFile ("Resources").getChildFile ("Samples.pdcpak");
+        if (c1.existsAsFile()) return c1;
+        auto c2 = f.getChildFile ("Samples.pdcpak");
+        if (c2.existsAsFile()) return c2;
+    }
+    return {};
+}
+
 void Library::scanFactory()
 {
     categories.clear();
     factory.clear();
 
-    auto json = juce::JSON::parse (factoryFolder.getChildFile ("library.json"));
+    juce::var json;
+    juce::int64 dataStart = 0;
+    if (packFile.existsAsFile())
+    {
+        juce::FileInputStream in (packFile);
+        char magic[8] = {};
+        if (in.openedOk() && in.read (magic, 8) == 8 && juce::String (magic, 7) == "PDCPAK1")
+        {
+            auto len = (juce::int64) in.readInt64();
+            juce::MemoryBlock mb;
+            in.readIntoMemoryBlock (mb, (ssize_t) len);
+            json = juce::JSON::parse (mb.toString());
+            dataStart = 16 + len;
+        }
+    }
+    else
+        json = juce::JSON::parse (factoryFolder.getChildFile ("library.json"));
     if (auto* cats = json.getProperty ("categories", {}).getArray())
         for (auto& c : *cats)
             categories.add ({ c.getProperty ("id", {}).toString(), c.getProperty ("name", {}).toString() });
@@ -48,11 +82,21 @@ void Library::scanFactory()
         for (auto& s : *arr)
         {
             LibraryEntry e;
-            e.file = factoryFolder.getChildFile (s.getProperty ("file", {}).toString());
-            e.name = e.file.getFileNameWithoutExtension();
+            e.name = juce::File::createFileWithoutCheckingPath ("/" + s.getProperty ("file", {}).toString()).getFileNameWithoutExtension();
             e.category = s.getProperty ("cat", {}).toString();
             e.rootMidi = (int) s.getProperty ("root", 48);
-            if (e.file.existsAsFile()) factory.add (e);
+            if (dataStart > 0)
+            {
+                e.file = packFile;
+                e.packOffset = dataStart + (juce::int64) s.getProperty ("offset", 0);
+                e.packSize = (juce::int64) s.getProperty ("size", 0);
+                factory.add (e);
+            }
+            else
+            {
+                e.file = factoryFolder.getChildFile (s.getProperty ("file", {}).toString());
+                if (e.file.existsAsFile()) factory.add (e);
+            }
         }
 }
 
@@ -128,7 +172,17 @@ const LibraryEntry* Library::find (const juce::String& categoryId, const juce::S
 
 std::shared_ptr<SampleData> Library::load (const LibraryEntry& e)
 {
-    std::unique_ptr<juce::AudioFormatReader> r (formats.createReaderFor (e.file));
+    std::unique_ptr<juce::AudioFormatReader> r;
+    if (e.packOffset >= 0)
+    {
+        juce::FileInputStream in (e.file);
+        if (! in.openedOk() || ! in.setPosition (e.packOffset)) return nullptr;
+        juce::MemoryBlock mb;
+        in.readIntoMemoryBlock (mb, (ssize_t) e.packSize);
+        r.reset (formats.createReaderFor (std::make_unique<juce::MemoryInputStream> (std::move (mb), false)));
+    }
+    else
+        r.reset (formats.createReaderFor (e.file));
     if (r == nullptr || r->lengthInSamples <= 0) return nullptr;
 
     auto len = (int) juce::jmin<juce::int64> (r->lengthInSamples, (juce::int64) (r->sampleRate * 30.0));

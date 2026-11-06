@@ -34,9 +34,10 @@ jobs:
         run: |
           set -e
           ART=build/PaffettiDubChords_artefacts/Release
+          python3 tools/make_pack.py Samples Samples.pdcpak
           for B in "$ART/VST3/Paffetti Dub Chords.vst3" "$ART/AU/Paffetti Dub Chords.component"; do
-            mkdir -p "$B/Contents/Resources/Samples"
-            cp -R Samples/ "$B/Contents/Resources/Samples/"
+            mkdir -p "$B/Contents/Resources"
+            cp Samples.pdcpak "$B/Contents/Resources/Samples.pdcpak"
             codesign --force --deep --sign - "$B"
             codesign --verify --deep --strict "$B"
           done

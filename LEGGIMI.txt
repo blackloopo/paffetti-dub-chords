@@ -1,4 +1,4 @@
-PAFFETTI DUB CHORDS  v0.1
+PAFFETTI DUB CHORDS  v0.1.1
 Powered by Black Loops
 
 Sampler di stab dub techno: ogni tasto suona un accordo completo.
