@@ -41,6 +41,13 @@ juce::File Library::locatePack()
         auto c2 = f.getChildFile ("Samples.pdcpak");
         if (c2.existsAsFile()) return c2;
     }
+    // installazione con l'installer: libreria condivisa da VST3 e AU
+    for (auto base : { juce::File::getSpecialLocation (juce::File::commonApplicationDataDirectory),
+                       juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory) })
+    {
+        auto p = base.getChildFile ("Application Support/Black Loops/Paffetti Dub Chords/Samples.pdcpak");
+        if (p.existsAsFile()) return p;
+    }
     return {};
 }
 

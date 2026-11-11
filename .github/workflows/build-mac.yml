@@ -39,9 +39,11 @@ jobs:
           exec > >(tee log-firma.txt) 2>&1
           ART=build/PaffettiDubChords_artefacts/Release
           python3 tools/make_pack.py Samples Samples.pdcpak 2>&1 | tee log-pack.txt
+          # libreria condivisa (come la mette l'installer)
+          LIBDIR="/Library/Application Support/Black Loops/Paffetti Dub Chords"
+          sudo mkdir -p "$LIBDIR"
+          sudo cp Samples.pdcpak "$LIBDIR/Samples.pdcpak"
           for B in "$ART/VST3/Paffetti Dub Chords.vst3" "$ART/AU/Paffetti Dub Chords.component"; do
-            mkdir -p "$B/Contents/Resources"
-            cp Samples.pdcpak "$B/Contents/Resources/Samples.pdcpak"
             codesign --force --deep --sign - "$B"
             codesign --verify --deep --strict "$B"
           done
@@ -71,6 +73,53 @@ jobs:
           ./pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process \
             --timeout-ms 120000 "build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3" 2>&1 | tee log-pluginval.txt
 
+      - name: Crea l'installer
+        id: pkg
+        run: |
+          set -e
+          exec > >(tee log-installer.txt) 2>&1
+          ART=build/PaffettiDubChords_artefacts/Release
+          VER=$(grep -m1 -oE 'VERSION [0-9.]+' CMakeLists.txt | cut -d' ' -f2)
+          rm -rf pkgroot && mkdir -p "pkgroot/vst3/Library/Audio/Plug-Ins/VST3" "pkgroot/au/Library/Audio/Plug-Ins/Components" \
+            "pkgroot/lib/Library/Application Support/Black Loops/Paffetti Dub Chords"
+          cp -R "$ART/VST3/Paffetti Dub Chords.vst3" "pkgroot/vst3/Library/Audio/Plug-Ins/VST3/"
+          cp -R "$ART/AU/Paffetti Dub Chords.component" "pkgroot/au/Library/Audio/Plug-Ins/Components/"
+          cp Samples.pdcpak "pkgroot/lib/Library/Application Support/Black Loops/Paffetti Dub Chords/"
+          for K in vst3 au; do
+            pkgbuild --analyze --root "pkgroot/$K" "comp-$K.plist"
+            # i plugin vanno sempre nella cartella giusta, mai "spostati" dove macOS trova un bundle uguale
+            /usr/libexec/PlistBuddy -c "Set :0:BundleIsRelocatable false" "comp-$K.plist"
+            pkgbuild --root "pkgroot/$K" --component-plist "comp-$K.plist" --identifier "com.blackloops.paffettidubchords.$K" \
+              --version "$VER" --install-location / "$K.pkg"
+          done
+          pkgbuild --root pkgroot/lib --identifier com.blackloops.paffettidubchords.lib --version "$VER" --install-location / lib.pkg
+          productbuild --distribution installer/distribution.xml --resources installer/resources --package-path . \
+            "Paffetti Dub Chords Installer.pkg"
+          pkgutil --payload-files "Paffetti Dub Chords Installer.pkg" | grep -vE "/Contents/(Resources/|_CodeSignature)" | head -40
+          ls -la "Paffetti Dub Chords Installer.pkg"
+
+      - name: Prova l'installer (installazione vera + test)
+        id: pkgtest
+        continue-on-error: true
+        timeout-minutes: 12
+        run: |
+          set -o pipefail
+          exec > >(tee log-prova-installer.txt) 2>&1
+          # pulizia: niente copie precedenti, così si prova solo quello che installa il .pkg
+          rm -rf ~/Library/Audio/Plug-Ins/Components/"Paffetti Dub Chords.component"
+          sudo rm -rf "/Library/Application Support/Black Loops"
+          sudo installer -pkg "Paffetti Dub Chords Installer.pkg" -target / -verbose
+          ls -la "/Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3/Contents/MacOS/"
+          ls -la "/Library/Audio/Plug-Ins/Components/Paffetti Dub Chords.component/Contents/MacOS/"
+          ls -la "/Library/Application Support/Black Loops/Paffetti Dub Chords/"
+          xattr -lr "/Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3" | head -5
+          killall -9 AudioComponentRegistrar || true
+          sleep 3
+          auval -v aumu Pdch Blkl 2>&1 | tee log-auval-installato.txt
+          grep -q "AU VALIDATION SUCCEEDED" log-auval-installato.txt
+          ./pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --timeout-ms 120000 \
+            "/Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3" 2>&1 | tee log-pluginval-installato.txt
+
       - name: Prepara lo zip
         id: zip
         run: |
@@ -80,9 +129,12 @@ jobs:
           cp -R "$ART/VST3/Paffetti Dub Chords.vst3" "pkg/Paffetti Dub Chords/"
           cp -R "$ART/AU/Paffetti Dub Chords.component" "pkg/Paffetti Dub Chords/"
           cp LEGGIMI.txt "pkg/Paffetti Dub Chords/"
-          rm -f "pkg/Paffetti Dub Chords/Paffetti Dub Chords.vst3/Contents/Resources/Samples.pdcpak"
-          rm -f "pkg/Paffetti Dub Chords/Paffetti Dub Chords.component/Contents/Resources/Samples.pdcpak"
-          cd pkg && ditto -c -k --sequesterRsrc --keepParent "Paffetti Dub Chords" "../Paffetti_Dub_Chords_mac.zip"
+          (cd pkg && ditto -c -k --sequesterRsrc --keepParent "Paffetti Dub Chords" "../Paffetti_Dub_Chords_mac.zip")
+          mkdir -p "inst/Paffetti Dub Chords Installer"
+          cp "Paffetti Dub Chords Installer.pkg" "inst/Paffetti Dub Chords Installer/"
+          cp installer/LEGGIMI-installer.txt "inst/Paffetti Dub Chords Installer/LEGGIMI.txt"
+          (cd inst && ditto -c -k --keepParent "Paffetti Dub Chords Installer" "../Paffetti_Dub_Chords_Installer.zip")
+          ls -la *.zip
 
       - name: Pubblica sul ramo builds
         if: always()
@@ -90,12 +142,14 @@ jobs:
           mkdir -p out
           cp log-*.txt out/ 2>/dev/null
           if [ -f Paffetti_Dub_Chords_mac.zip ]; then cp Paffetti_Dub_Chords_mac.zip out/; else echo "zip non creato" > out/ERRORE.txt; fi
+          [ -f Paffetti_Dub_Chords_Installer.zip ] && cp Paffetti_Dub_Chords_Installer.zip out/
           [ -f Samples.pdcpak ] && cp Samples.pdcpak out/
           shasum -a 256 Samples.pdcpak > out/pack.sha256 2>/dev/null
           {
             echo "commit ${{ github.sha }}"
             echo "configura=${{ steps.cfg.outcome }} compila=${{ steps.build.outcome }} firma=${{ steps.sign.outcome }}"
             echo "auval=${{ steps.auval.outcome }} pluginval=${{ steps.pluginval.outcome }} zip=${{ steps.zip.outcome }}"
+            echo "installer=${{ steps.pkg.outcome }} prova_installer=${{ steps.pkgtest.outcome }}"
           } > out/esito.txt
           ls -la out
           cd out

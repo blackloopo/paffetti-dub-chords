@@ -1,0 +1,17 @@
+PAFFETTI DUB CHORDS – INSTALLAZIONE
+
+1. Fai doppio clic su "Paffetti Dub Chords Installer.pkg".
+2. Se il Mac dice che non può aprirlo perché lo sviluppatore non è verificato:
+   chiudi l'avviso, apri Impostazioni di Sistema > Privacy e sicurezza,
+   scorri in basso e clicca "Apri comunque" accanto a "Paffetti Dub Chords Installer".
+   Poi conferma con la password del Mac.
+3. Segui l'installer fino alla fine.
+4. In Ableton: Preferenze > Plug-in > "Ricerca nuovamente".
+   Lo trovi negli strumenti sotto Black Loops.
+
+Funziona su Mac Apple Silicon e Intel, macOS 11 o successivo.
+
+---
+INSTALL (EN)
+Double-click the .pkg. If macOS blocks it: System Settings > Privacy & Security >
+"Open Anyway". Then rescan plugins in your DAW (under Black Loops).

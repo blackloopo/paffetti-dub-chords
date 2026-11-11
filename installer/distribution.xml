@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+    <title>Paffetti Dub Chords</title>
+    <welcome file="welcome.html" mime-type="text/html"/>
+    <conclusion file="conclusion.html" mime-type="text/html"/>
+    <options customize="allow" require-scripts="false" hostArchitectures="arm64,x86_64"/>
+    <domains enable_localSystem="true"/>
+    <choices-outline>
+        <line choice="vst3"/>
+        <line choice="au"/>
+        <line choice="lib"/>
+    </choices-outline>
+    <choice id="vst3" title="VST3" description="Plugin VST3 (Ableton Live, Bitwig, Cubase...)">
+        <pkg-ref id="com.blackloops.paffettidubchords.vst3"/>
+    </choice>
+    <choice id="au" title="Audio Unit" description="Plugin AU (Logic, Ableton Live, GarageBand...)">
+        <pkg-ref id="com.blackloops.paffettidubchords.au"/>
+    </choice>
+    <choice id="lib" title="Libreria stab" description="290 stab dub techno (necessaria)" enabled="false">
+        <pkg-ref id="com.blackloops.paffettidubchords.lib"/>
+    </choice>
+    <pkg-ref id="com.blackloops.paffettidubchords.vst3">vst3.pkg</pkg-ref>
+    <pkg-ref id="com.blackloops.paffettidubchords.au">au.pkg</pkg-ref>
+    <pkg-ref id="com.blackloops.paffettidubchords.lib">lib.pkg</pkg-ref>
+</installer-gui-script>
