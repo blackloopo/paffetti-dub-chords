@@ -88,7 +88,7 @@ jobs:
           for K in vst3 au; do
             pkgbuild --analyze --root "pkgroot/$K" "comp-$K.plist"
             # i plugin vanno sempre nella cartella giusta, mai "spostati" dove macOS trova un bundle uguale
-            /usr/libexec/PlistBuddy -c "Set :0:BundleIsRelocatable false" "comp-$K.plist"
+            python3 -c "import plistlib,sys; f=sys.argv[1]; d=plistlib.load(open(f,'rb')); [e.__setitem__('BundleIsRelocatable', False) for e in d]; plistlib.dump(d, open(f,'wb')); print(f, len(d), 'bundle')" "comp-$K.plist"
             pkgbuild --root "pkgroot/$K" --component-plist "comp-$K.plist" --identifier "com.blackloops.paffettidubchords.$K" \
               --version "$VER" --install-location / "$K.pkg"
           done
