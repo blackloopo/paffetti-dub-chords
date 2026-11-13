@@ -1,0 +1,4 @@
+commit 65766d47a64935838193d1e3459803a4765f8553
+configura=success compila=success firma=success
+auval=success pluginval=success zip=success
+installer=success prova_installer=success

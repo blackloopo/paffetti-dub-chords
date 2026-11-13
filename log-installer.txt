@@ -1,0 +1,28 @@
+pkgbuild: Inferring bundle components from contents of pkgroot/vst3
+pkgbuild: Writing new component property list to comp-vst3.plist
+comp-vst3.plist 1 bundle
+pkgbuild: Reading components from comp-vst3.plist
+pkgbuild: Adding component at Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3
+pkgbuild: Wrote package to vst3.pkg
+pkgbuild: Inferring bundle components from contents of pkgroot/au
+pkgbuild: Writing new component property list to comp-au.plist
+comp-au.plist 1 bundle
+pkgbuild: Reading components from comp-au.plist
+pkgbuild: Adding component at Library/Audio/Plug-Ins/Components/Paffetti Dub Chords.component
+pkgbuild: Wrote package to au.pkg
+pkgbuild: Inferring bundle components from contents of pkgroot/lib
+pkgbuild: Wrote package to lib.pkg
+productbuild: Wrote product to Paffetti Dub Chords Installer.pkg
+.
+./Library
+./Library/Audio
+./Library/Audio/Plug-Ins
+./Library/Audio/Plug-Ins/VST3
+./Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3
+./Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3/Contents
+./Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3/Contents/MacOS
+./Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3/Contents/MacOS/Paffetti Dub Chords
+./Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3/Contents/Resources
+./Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3/Contents/Info.plist
+./Library/Audio/Plug-Ins/VST3/Paffetti Dub Chords.vst3/Contents/PkgInfo
+-rw-r--r--  1 runner  staff  61381281 Nov 13 22:29 Paffetti Dub Chords Installer.pkg

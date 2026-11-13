@@ -1,0 +1,206 @@
+[  1%] Generating juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData1.cpp, juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData2.cpp, juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData3.cpp, juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData.h
+[  3%] Building CXX object CMakeFiles/PaffettiDubChords_vst3_helper.dir/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.mm.o
+[  5%] Building CXX object CMakeFiles/PDCBinary.dir/juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData1.cpp.o
+[  7%] Building CXX object CMakeFiles/PDCBinary.dir/juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData2.cpp.o
+[  9%] Building CXX object CMakeFiles/PDCBinary.dir/juce_binarydata_PDCBinary/JuceLibraryCode/BinaryData3.cpp.o
+[ 11%] Linking CXX static library libPDCBinary.a
+[ 11%] Built target PDCBinary
+[ 13%] Building CXX object CMakeFiles/PaffettiDubChords.dir/Source/PluginProcessor.cpp.o
+[ 15%] Building CXX object CMakeFiles/PaffettiDubChords.dir/Source/PluginEditor.cpp.o
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:9:54: warning: declaration shadows a field of 'StabVoice' [-Wshadow]
+    9 |                        const juce::ADSR::Parameters& env, const FilterFrame& ff)
+      |                                                      ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.h:66:13: note: previous declaration is here
+   66 |     SoftEnv env;
+      |             ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:344:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  344 |                     if (cyc != lastShCycle) { shValue = lfoRnd.nextFloat() * 2.0f - 1.0f; lastShCycle = cyc; }
+      |                         ~~~ ^  ~~~~~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:433:12: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  433 |     if (lo != lastLow || hi != lastHigh)
+      |         ~~ ^  ~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:433:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  433 |     if (lo != lastLow || hi != lastHigh)
+      |                          ~~ ^  ~~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:435:81: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  435 |         auto lc = juce::dsp::IIR::Coefficients<float>::makeLowShelf (sr, 120.0, 0.7, juce::Decibels::decibelsToGain (lo));
+      |                   ~~~~                                                          ^~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:436:83: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  436 |         auto hc = juce::dsp::IIR::Coefficients<float>::makeHighShelf (sr, 5000.0, 0.7, juce::Decibels::decibelsToGain (hi));
+      |                   ~~~~                                                            ^~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:549:7: warning: field 'lfoSync' will be initialized after field 'presetBar' [-Wreorder-ctor]
+  540 |       dlySync (p.apvts, "dlySync", { "SYNC" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       presetBar (p)
+  541 |       dlyPing (p.apvts, "dlyPing", { "PING" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       dlySync (p.apvts, "dlySync", { "SYNC" })
+  542 |       dlySweepDiv (p.apvts, "dlySweepDiv", { "2", "8", "32" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       dlyPing (p.apvts, "dlyPing", { "PING" })
+  543 |       phSync (p.apvts, "phSync", { "SYNC" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       dlySweepDiv (p.apvts, "dlySweepDiv", { "2", "8", "32" })
+  544 |       phStages (p.apvts, "phStages", { "4", "8", "12" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       phSync (p.apvts, "phSync", { "SYNC" })
+  545 |       flSync (p.apvts, "flSync", { "SYNC" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       phStages (p.apvts, "phStages", { "4", "8", "12" })
+  546 |       poly (p.apvts, "poly", { "1", "4", "8" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       flSync (p.apvts, "flSync", { "SYNC" })
+  547 |       fltMode (p.apvts, "fltMode", { "LP", "BP", "HP" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       poly (p.apvts, "poly", { "1", "4", "8" })
+  548 |       lfoShape (p.apvts, "lfoShape", { "SIN", "TRI", "RMP", "S&H" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       fltMode (p.apvts, "fltMode", { "LP", "BP", "HP" })
+  549 |       lfoSync (p.apvts, "lfoSync", { "SYNC" }),
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       lfoShape (p.apvts, "lfoShape", { "SIN", "TRI", "RMP", "S&H" })
+  550 |       presetBar (p), scope (p), meter (p), keyboard (p)
+      |       ~~~~~~~~~~~~~
+      |       lfoSync (p.apvts, "lfoSync", { "SYNC" })
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:1:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.h:161:12: warning: private field 'freeLfoPhase' is not used [-Wunused-private-field]
+  161 |     double freeLfoPhase = 0;
+      |            ^
+[ 17%] Linking CXX executable PaffettiDubChords_vst3_helper
+[ 17%] Built target PaffettiDubChords_vst3_helper
+[ 19%] Building CXX object CMakeFiles/PaffettiDubChords.dir/Source/Library.cpp.o
+1 warning generated.
+7 warnings generated.
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginEditor.cpp:549:7: warning: field 'lfoSync' will be initialized after field 'presetBar' [-Wreorder-ctor]
+  540 |       dlySync (p.apvts, "dlySync", { "SYNC" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       presetBar (p)
+  541 |       dlyPing (p.apvts, "dlyPing", { "PING" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       dlySync (p.apvts, "dlySync", { "SYNC" })
+  542 |       dlySweepDiv (p.apvts, "dlySweepDiv", { "2", "8", "32" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       dlyPing (p.apvts, "dlyPing", { "PING" })
+  543 |       phSync (p.apvts, "phSync", { "SYNC" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       dlySweepDiv (p.apvts, "dlySweepDiv", { "2", "8", "32" })
+  544 |       phStages (p.apvts, "phStages", { "4", "8", "12" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       phSync (p.apvts, "phSync", { "SYNC" })
+  545 |       flSync (p.apvts, "flSync", { "SYNC" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       phStages (p.apvts, "phStages", { "4", "8", "12" })
+  546 |       poly (p.apvts, "poly", { "1", "4", "8" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       flSync (p.apvts, "flSync", { "SYNC" })
+  547 |       fltMode (p.apvts, "fltMode", { "LP", "BP", "HP" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       poly (p.apvts, "poly", { "1", "4", "8" })
+  548 |       lfoShape (p.apvts, "lfoShape", { "SIN", "TRI", "RMP", "S&H" }),
+      |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       fltMode (p.apvts, "fltMode", { "LP", "BP", "HP" })
+  549 |       lfoSync (p.apvts, "lfoSync", { "SYNC" }),
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |       lfoShape (p.apvts, "lfoShape", { "SIN", "TRI", "RMP", "S&H" })
+  550 |       presetBar (p), scope (p), meter (p), keyboard (p)
+      |       ~~~~~~~~~~~~~
+      |       lfoSync (p.apvts, "lfoSync", { "SYNC" })
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:9:54: warning: declaration shadows a field of 'StabVoice' [-Wshadow]
+    9 |                        const juce::ADSR::Parameters& env, const FilterFrame& ff)
+      |                                                      ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.h:66:13: note: previous declaration is here
+   66 |     SoftEnv env;
+      |             ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:344:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  344 |                     if (cyc != lastShCycle) { shValue = lfoRnd.nextFloat() * 2.0f - 1.0f; lastShCycle = cyc; }
+      |                         ~~~ ^  ~~~~~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:433:12: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  433 |     if (lo != lastLow || hi != lastHigh)
+      |         ~~ ^  ~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:433:29: warning: comparing floating point with == or != is unsafe [-Wfloat-equal]
+  433 |     if (lo != lastLow || hi != lastHigh)
+      |                          ~~ ^  ~~~~~~~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:435:81: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  435 |         auto lc = juce::dsp::IIR::Coefficients<float>::makeLowShelf (sr, 120.0, 0.7, juce::Decibels::decibelsToGain (lo));
+      |                   ~~~~                                                          ^~~
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:436:83: warning: implicit conversion loses floating-point precision: 'double' to 'float' [-Wimplicit-float-conversion]
+  436 |         auto hc = juce::dsp::IIR::Coefficients<float>::makeHighShelf (sr, 5000.0, 0.7, juce::Decibels::decibelsToGain (hi));
+      |                   ~~~~                                                            ^~~
+[ 21%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_processors/juce_audio_processors_ara.cpp.o
+[ 23%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_processors/juce_audio_processors_lv2_libs.cpp.o
+[ 25%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_processors/juce_audio_processors.mm.o
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.cpp:1:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/Source/PluginProcessor.h:161:12: warning: private field 'freeLfoPhase' is not used [-Wunused-private-field]
+  161 |     double freeLfoPhase = 0;
+      |            ^
+1 warning generated.
+[ 26%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_gui_extra/juce_gui_extra.mm.o
+7 warnings generated.
+[ 28%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_gui_basics/juce_gui_basics.mm.o
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:61:2: warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_core/system/juce_PlatformDefs.h:292:38: note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>:112:2: note: expanded from here
+  112 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+[ 30%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.o
+[ 32%] Building C object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_graphics/juce_graphics_Sheenbidi.c.o
+[ 34%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_graphics/juce_graphics.mm.o
+1 warning generated.
+In file included from /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.mm:35:
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:61:2: warning: This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored [-W#pragma-messages]
+   61 |  JUCE_COMPILER_WARNING ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/JUCE/modules/juce_core/system/juce_PlatformDefs.h:292:38: note: expanded from macro 'JUCE_COMPILER_WARNING'
+  292 |  #define JUCE_COMPILER_WARNING(msg)  _Pragma (JUCE_STRINGIFY (message (msg)))
+      |                                      ^
+<scratch space>:6:2: note: expanded from here
+    6 |  message ("This version of JUCE does not use the splash screen, the flag JUCE_DISPLAY_SPLASH_SCREEN is ignored")
+      |  ^
+[ 36%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_events/juce_events.mm.o
+[ 38%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_core/juce_core_CompilationTime.cpp.o
+[ 40%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_core/juce_core.mm.o
+[ 42%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_data_structures/juce_data_structures.mm.o
+[ 44%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_basics/juce_audio_basics.mm.o
+1 warning generated.
+[ 46%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 48%] Building CXX object CMakeFiles/PaffettiDubChords.dir/JUCE/modules/juce_dsp/juce_dsp.mm.o
+[ 50%] Linking CXX static library "PaffettiDubChords_artefacts/Release/libPaffetti Dub Chords_SharedCode.a"
+[ 50%] Built target PaffettiDubChords
+[ 53%] Generating PaffettiDubChords_artefacts/JuceLibraryCode/PaffettiDubChords_AU/PkgInfo
+[ 53%] Generating PaffettiDubChords_artefacts/JuceLibraryCode/PaffettiDubChords_VST3/PkgInfo
+[ 55%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.o
+[ 57%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.o
+[ 59%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX_utils.cpp.o
+[ 61%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.o
+[ 63%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_ARA.cpp.o
+[ 65%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.o
+[ 67%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.mm.o
+[ 69%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Standalone.cpp.o
+[ 71%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm.o
+[ 73%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_Unity.cpp.o
+[ 75%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_2.mm.o
+[ 76%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AUv3.mm.o
+[ 78%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.mm.o
+[ 80%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AAX.mm.o
+[ 82%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm.o
+[ 84%] Building CXX object CMakeFiles/PaffettiDubChords_VST3.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm.o
+[ 86%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_1.mm.o
+[ 88%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AU_2.mm.o
+[ 90%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_AUv3.mm.o
+[ 92%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_LV2.mm.o
+[ 94%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm.o
+[ 96%] Building CXX object CMakeFiles/PaffettiDubChords_AU.dir/JUCE/modules/juce_audio_plugin_client/juce_audio_plugin_client_VST3.mm.o
+[ 98%] Linking CXX CFBundle shared module "PaffettiDubChords_artefacts/Release/AU/Paffetti Dub Chords.component/Contents/MacOS/Paffetti Dub Chords"
+[100%] Linking CXX CFBundle shared module "PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3/Contents/MacOS/Paffetti Dub Chords"
+[100%] Built target PaffettiDubChords_AU
+/Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3: code object is not signed at all
+In architecture: x86_64
+-- Replacing invalid signature with ad-hoc signature
+removing moduleinfo.json
+creating /Users/runner/work/paffetti-dub-chords/paffetti-dub-chords/build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3
+[100%] Built target PaffettiDubChords_VST3

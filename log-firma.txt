@@ -1,0 +1,3 @@
+Samples.pdcpak 290 stab 53148 KB
+build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3: replacing existing signature
+Architectures in the fat file: build/PaffettiDubChords_artefacts/Release/VST3/Paffetti Dub Chords.vst3/Contents/MacOS/Paffetti Dub Chords are: x86_64 arm64 
