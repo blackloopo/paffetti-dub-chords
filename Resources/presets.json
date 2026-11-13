@@ -28,7 +28,7 @@
     "lfoDiv": 5,
     "lfoShape": 0,
     "lfoDepth": 0.423,
-    "volume": -4.6
+    "volume": -3.9
    }
   },
   {
@@ -59,7 +59,7 @@
     "lfoDiv": 6,
     "lfoShape": 1,
     "lfoDepth": 0.441,
-    "volume": -5.0
+    "volume": -3.2
    }
   },
   {
@@ -91,7 +91,7 @@
     "lfoShape": 0,
     "lfoDepth": 0.305,
     "dlyPing": 1,
-    "volume": -7.3
+    "volume": -5.3
    }
   },
   {
@@ -122,7 +122,7 @@
     "lfoDiv": 7,
     "lfoShape": 0,
     "lfoDepth": 0.362,
-    "volume": 1.6
+    "volume": 4.8
    }
   },
   {
@@ -153,7 +153,7 @@
     "lfoDiv": 4,
     "lfoShape": 1,
     "lfoDepth": 0.412,
-    "volume": -5.4
+    "volume": -4.9
    }
   },
   {
@@ -184,7 +184,7 @@
     "lfoDiv": 5,
     "lfoShape": 0,
     "lfoDepth": 0.3,
-    "volume": -6.4
+    "volume": -4.5
    }
   },
   {
@@ -215,7 +215,7 @@
     "lfoDiv": 6,
     "lfoShape": 1,
     "lfoDepth": 0.418,
-    "volume": -9.0
+    "volume": -7.7
    }
   },
   {
@@ -247,7 +247,7 @@
     "lfoShape": 0,
     "lfoDepth": 0.454,
     "dlyPing": 1,
-    "volume": -1.4
+    "volume": 0.3
    }
   },
   {
@@ -278,7 +278,7 @@
     "lfoDiv": 7,
     "lfoShape": 0,
     "lfoDepth": 0.309,
-    "volume": -2.9
+    "volume": -1.0
    }
   },
   {
@@ -309,7 +309,7 @@
     "lfoDiv": 4,
     "lfoShape": 1,
     "lfoDepth": 0.369,
-    "volume": -4.2
+    "volume": -3.0
    }
   },
   {
@@ -373,7 +373,7 @@
     "lfoShape": 1,
     "lfoDepth": 0.496,
     "low": 1.0,
-    "volume": -6.5
+    "volume": -4.9
    }
   },
   {
@@ -405,7 +405,7 @@
     "lfoShape": 0,
     "lfoDepth": 0.538,
     "low": 1.0,
-    "volume": -5.3
+    "volume": -4.7
    }
   },
   {
@@ -441,7 +441,7 @@
     "phDiv": 5,
     "phDepth": 0.6,
     "phFeed": 0.4,
-    "volume": 3.5
+    "volume": 5.6
    }
   },
   {
@@ -473,7 +473,7 @@
     "lfoShape": 1,
     "lfoDepth": 0.595,
     "low": 1.0,
-    "volume": -6.4
+    "volume": -5.3
    }
   },
   {
@@ -505,7 +505,7 @@
     "lfoShape": 0,
     "lfoDepth": 0.598,
     "low": 1.0,
-    "volume": 4.9
+    "volume": 6.0
    }
   },
   {
@@ -537,7 +537,7 @@
     "lfoShape": 1,
     "lfoDepth": 0.694,
     "low": 1.0,
-    "volume": -4.7
+    "volume": -3.1
    }
   },
   {
@@ -569,7 +569,7 @@
     "lfoShape": 0,
     "lfoDepth": 0.649,
     "low": 1.0,
-    "volume": -5.8
+    "volume": -4.9
    }
   },
   {
@@ -605,7 +605,7 @@
     "phDiv": 5,
     "phDepth": 0.6,
     "phFeed": 0.4,
-    "volume": 1.4
+    "volume": 2.8
    }
   },
   {
@@ -637,7 +637,7 @@
     "lfoShape": 1,
     "lfoDepth": 0.699,
     "low": 1.0,
-    "volume": -4.6
+    "volume": -3.9
    }
   },
   {
@@ -668,7 +668,7 @@
     "lfoDiv": 7,
     "lfoDepth": 0.309,
     "low": 2.0,
-    "volume": -6.7
+    "volume": -5.9
    }
   },
   {
@@ -699,7 +699,7 @@
     "lfoDiv": 6,
     "lfoDepth": 0.249,
     "low": 2.0,
-    "volume": 2.1
+    "volume": 4.0
    }
   },
   {
@@ -730,7 +730,7 @@
     "lfoDiv": 8,
     "lfoDepth": 0.325,
     "low": 2.0,
-    "volume": -5.1
+    "volume": -4.6
    }
   },
   {
@@ -761,7 +761,7 @@
     "lfoDiv": 5,
     "lfoDepth": 0.336,
     "low": 2.0,
-    "volume": -4.3
+    "volume": -2.5
    }
   },
   {
@@ -792,7 +792,7 @@
     "lfoDiv": 7,
     "lfoDepth": 0.233,
     "low": 2.0,
-    "volume": -5.7
+    "volume": -4.6
    }
   },
   {
@@ -823,7 +823,7 @@
     "lfoDiv": 7,
     "lfoDepth": 0.246,
     "low": 2.0,
-    "volume": -5.6
+    "volume": -5.0
    }
   },
   {
@@ -885,7 +885,7 @@
     "lfoDiv": 8,
     "lfoDepth": 0.214,
     "low": 2.0,
-    "volume": -5.3
+    "volume": -2.6
    }
   },
   {
@@ -916,7 +916,7 @@
     "lfoDiv": 5,
     "lfoDepth": 0.231,
     "low": 2.0,
-    "volume": -7.3
+    "volume": -5.1
    }
   },
   {
@@ -947,7 +947,7 @@
     "lfoDiv": 7,
     "lfoDepth": 0.299,
     "low": 2.0,
-    "volume": -6.3
+    "volume": -5.5
    }
   },
   {
@@ -982,7 +982,7 @@
     "flDiv": 4,
     "flDepth": 0.636,
     "flFeed": 0.44,
-    "volume": 1.9
+    "volume": 2.6
    }
   },
   {
@@ -1017,7 +1017,7 @@
     "flDiv": 5,
     "flDepth": 0.543,
     "flFeed": -0.533,
-    "volume": -4.3
+    "volume": -1.8
    }
   },
   {
@@ -1052,7 +1052,7 @@
     "flDiv": 3,
     "flDepth": 0.679,
     "flFeed": 0.487,
-    "volume": -2.1
+    "volume": -1.2
    }
   },
   {
@@ -1087,7 +1087,7 @@
     "flDiv": 6,
     "flDepth": 0.534,
     "flFeed": -0.362,
-    "volume": -6.8
+    "volume": -5.1
    }
   },
   {
@@ -1125,7 +1125,7 @@
     "phMix": 0.413,
     "phStages": 2,
     "phDiv": 4,
-    "volume": -2.1
+    "volume": -1.0
    }
   },
   {
@@ -1160,7 +1160,7 @@
     "flDiv": 4,
     "flDepth": 0.741,
     "flFeed": 0.572,
-    "volume": 2.4
+    "volume": 3.7
    }
   },
   {
@@ -1195,7 +1195,7 @@
     "flDiv": 5,
     "flDepth": 0.736,
     "flFeed": -0.485,
-    "volume": -4.2
+    "volume": -2.9
    }
   },
   {
@@ -1230,7 +1230,7 @@
     "flDiv": 3,
     "flDepth": 0.528,
     "flFeed": 0.332,
-    "volume": 0.4
+    "volume": 1.3
    }
   },
   {
@@ -1265,7 +1265,7 @@
     "flDiv": 6,
     "flDepth": 0.74,
     "flFeed": -0.306,
-    "volume": -2.8
+    "volume": -1.0
    }
   },
   {
@@ -1303,7 +1303,7 @@
     "phMix": 0.403,
     "phStages": 2,
     "phDiv": 4,
-    "volume": -2.3
+    "volume": -0.9
    }
   },
   {
@@ -1333,7 +1333,7 @@
     "fltDecay": 160.0,
     "lfoDiv": 5,
     "lfoDepth": 0.22,
-    "volume": -3.7
+    "volume": -2.8
    }
   },
   {
@@ -1363,7 +1363,7 @@
     "fltDecay": 153.0,
     "lfoDiv": 4,
     "lfoDepth": 0.248,
-    "volume": -4.6
+    "volume": -3.3
    }
   },
   {
@@ -1393,7 +1393,7 @@
     "fltDecay": 195.0,
     "lfoDiv": 6,
     "lfoDepth": 0.253,
-    "volume": 5.8
+    "volume": 6.0
    }
   },
   {
@@ -1423,7 +1423,7 @@
     "fltDecay": 140.0,
     "lfoDiv": 5,
     "lfoDepth": 0.269,
-    "volume": -2.6
+    "volume": -2.2
    }
   },
   {
@@ -1453,7 +1453,7 @@
     "fltDecay": 163.0,
     "lfoDiv": 3,
     "lfoDepth": 0.296,
-    "volume": -3.5
+    "volume": -2.6
    }
   },
   {
@@ -1483,7 +1483,7 @@
     "fltDecay": 199.0,
     "lfoDiv": 5,
     "lfoDepth": 0.256,
-    "volume": -3.2
+    "volume": -2.5
    }
   },
   {
@@ -1513,7 +1513,7 @@
     "fltDecay": 122.0,
     "lfoDiv": 4,
     "lfoDepth": 0.208,
-    "volume": -5.4
+    "volume": -4.1
    }
   },
   {
@@ -1543,7 +1543,7 @@
     "fltDecay": 132.0,
     "lfoDiv": 6,
     "lfoDepth": 0.255,
-    "volume": -0.4
+    "volume": -0.8
    }
   },
   {
@@ -1573,7 +1573,7 @@
     "fltDecay": 158.0,
     "lfoDiv": 5,
     "lfoDepth": 0.27,
-    "volume": -3.9
+    "volume": -3.5
    }
   },
   {
@@ -1603,7 +1603,7 @@
     "fltDecay": 169.0,
     "lfoDiv": 3,
     "lfoDepth": 0.218,
-    "volume": -4.3
+    "volume": -3.3
    }
   },
   {
@@ -1635,7 +1635,7 @@
     "lfoDepth": 0.187,
     "spDecay": 0.64,
     "decay": 581.0,
-    "volume": -1.0
+    "volume": 1.5
    }
   },
   {
@@ -1667,7 +1667,7 @@
     "lfoDepth": 0.188,
     "spDecay": 0.604,
     "decay": 691.0,
-    "volume": 3.9
+    "volume": 5.0
    }
   },
   {
@@ -1699,7 +1699,7 @@
     "lfoDepth": 0.165,
     "spDecay": 0.627,
     "decay": 391.0,
-    "volume": -0.5
+    "volume": 3.6
    }
   },
   {
@@ -1732,7 +1732,7 @@
     "spDecay": 0.69,
     "decay": 408.0,
     "dlyPing": 1,
-    "volume": 4.8
+    "volume": 6.0
    }
   },
   {
@@ -1764,7 +1764,7 @@
     "lfoDepth": 0.198,
     "spDecay": 0.653,
     "decay": 487.0,
-    "volume": -2.1
+    "volume": -0.4
    }
   },
   {
@@ -1796,7 +1796,7 @@
     "lfoDepth": 0.171,
     "spDecay": 0.633,
     "decay": 417.0,
-    "volume": 2.9
+    "volume": 4.6
    }
   },
   {
@@ -1828,7 +1828,7 @@
     "lfoDepth": 0.288,
     "spDecay": 0.618,
     "decay": 393.0,
-    "volume": 0.3
+    "volume": 2.3
    }
   },
   {
@@ -1860,7 +1860,7 @@
     "lfoDepth": 0.298,
     "spDecay": 0.644,
     "decay": 589.0,
-    "volume": 1.1
+    "volume": 2.4
    }
   },
   {
@@ -1893,7 +1893,7 @@
     "spDecay": 0.664,
     "decay": 677.0,
     "dlyPing": 1,
-    "volume": 1.7
+    "volume": 4.4
    }
   },
   {
@@ -1925,7 +1925,7 @@
     "lfoDepth": 0.168,
     "spDecay": 0.629,
     "decay": 635.0,
-    "volume": -2.5
+    "volume": -0.8
    }
   },
   {
@@ -1956,7 +1956,7 @@
     "lfoDiv": 2,
     "lfoShape": 3,
     "lfoDepth": 0.289,
-    "volume": -5.2
+    "volume": -3.3
    }
   },
   {
@@ -1987,7 +1987,7 @@
     "lfoDiv": 4,
     "lfoShape": 2,
     "lfoDepth": 0.264,
-    "volume": -2.4
+    "volume": -1.9
    }
   },
   {
@@ -2018,7 +2018,7 @@
     "lfoDiv": 3,
     "lfoShape": 3,
     "lfoDepth": 0.291,
-    "volume": -2.9
+    "volume": -1.3
    }
   },
   {
@@ -2049,7 +2049,7 @@
     "lfoDiv": 8,
     "lfoShape": 0,
     "lfoDepth": 0.383,
-    "volume": -3.7
+    "volume": -1.8
    }
   },
   {
@@ -2080,7 +2080,7 @@
     "lfoDiv": 7,
     "lfoShape": 1,
     "lfoDepth": 0.354,
-    "volume": -6.2
+    "volume": -3.6
    }
   },
   {
@@ -2111,7 +2111,7 @@
     "lfoDiv": 2,
     "lfoShape": 3,
     "lfoDepth": 0.315,
-    "volume": -5.6
+    "volume": -3.4
    }
   },
   {
@@ -2142,7 +2142,7 @@
     "lfoDiv": 4,
     "lfoShape": 2,
     "lfoDepth": 0.377,
-    "volume": -7.4
+    "volume": -5.7
    }
   },
   {
@@ -2173,7 +2173,7 @@
     "lfoDiv": 3,
     "lfoShape": 3,
     "lfoDepth": 0.289,
-    "volume": -6.8
+    "volume": -3.9
    }
   },
   {
@@ -2204,7 +2204,7 @@
     "lfoDiv": 8,
     "lfoShape": 0,
     "lfoDepth": 0.29,
-    "volume": -5.7
+    "volume": -3.7
    }
   },
   {
@@ -2235,7 +2235,7 @@
     "lfoDiv": 7,
     "lfoShape": 1,
     "lfoDepth": 0.32,
-    "volume": -5.0
+    "volume": -2.9
    }
   },
   {
@@ -2270,7 +2270,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -4.4
+    "volume": -3.2
    }
   },
   {
@@ -2305,7 +2305,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -2.7
+    "volume": -1.3
    }
   },
   {
@@ -2340,7 +2340,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -4.5
+    "volume": -3.6
    }
   },
   {
@@ -2375,7 +2375,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -3.5
+    "volume": -1.9
    }
   },
   {
@@ -2410,7 +2410,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -1.3
+    "volume": -0.3
    }
   },
   {
@@ -2445,7 +2445,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -3.4
+    "volume": -2.5
    }
   },
   {
@@ -2480,7 +2480,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -2.3
+    "volume": -1.3
    }
   },
   {
@@ -2515,7 +2515,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -2.6
+    "volume": -1.7
    }
   },
   {
@@ -2550,7 +2550,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -1.3
+    "volume": 0.3
    }
   },
   {
@@ -2585,7 +2585,7 @@
     "flDepth": 0.4,
     "flFeed": 0.2,
     "high": 1.5,
-    "volume": -2.2
+    "volume": -0.7
    }
   },
   {
@@ -2615,7 +2615,7 @@
     "lfoDepth": 0.097,
     "lfoDiv": 7,
     "decay": 4000,
-    "volume": -5.9
+    "volume": -2.2
    }
   },
   {
@@ -2645,7 +2645,7 @@
     "lfoDepth": 0.129,
     "lfoDiv": 8,
     "decay": 4000,
-    "volume": -8.9
+    "volume": -5.9
    }
   },
   {
@@ -2675,7 +2675,7 @@
     "lfoDepth": 0.072,
     "lfoDiv": 6,
     "decay": 4000,
-    "volume": -8.2
+    "volume": -4.7
    }
   },
   {
@@ -2706,7 +2706,7 @@
     "lfoDiv": 2,
     "decay": 4000,
     "lfoShape": 3,
-    "volume": -7.1
+    "volume": -5.4
    }
   },
   {
@@ -2736,7 +2736,7 @@
     "lfoDepth": 0.086,
     "lfoDiv": 8,
     "decay": 4000,
-    "volume": -8.1
+    "volume": -4.5
    }
   },
   {
@@ -2766,7 +2766,7 @@
     "lfoDepth": 0.105,
     "lfoDiv": 7,
     "decay": 4000,
-    "volume": -10.1
+    "volume": -6.7
    }
   },
   {
@@ -2796,7 +2796,7 @@
     "lfoDepth": 0.081,
     "lfoDiv": 8,
     "decay": 4000,
-    "volume": -8.1
+    "volume": -5.8
    }
   },
   {
@@ -2826,7 +2826,7 @@
     "lfoDepth": 0.105,
     "lfoDiv": 6,
     "decay": 4000,
-    "volume": -6.1
+    "volume": -1.7
    }
   },
   {
@@ -2857,7 +2857,7 @@
     "lfoDiv": 2,
     "decay": 4000,
     "lfoShape": 3,
-    "volume": -11.8
+    "volume": -7.5
    }
   },
   {
@@ -2887,7 +2887,7 @@
     "lfoDepth": 0.058,
     "lfoDiv": 8,
     "decay": 4000,
-    "volume": -8.4
+    "volume": -5.4
    }
   }
  ]

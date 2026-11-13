@@ -676,7 +676,7 @@ void MainPanel::paint (juce::Graphics& g)
     g.setFont (RetroFonts::vt (22.0f)); g.setColour (pal::yellow);
     g.drawFittedText (chordText, { 18, 668, 136, 44 }, juce::Justification::topLeft, 2);
     pixelText (g, "POLY", { 1040, 696, 60, 12 }, 7.0f, pal::tan, juce::Justification::centredRight);
-    pixelText (g, "v0.3", { 1040, 752, 60, 12 }, 6.0f, pal::rim.brighter (0.5f), juce::Justification::centredRight);
+    pixelText (g, "v0.3.1", { 1040, 752, 60, 12 }, 6.0f, pal::rim.brighter (0.5f), juce::Justification::centredRight);
 }
 
 void MainPanel::resized()

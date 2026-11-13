@@ -15,10 +15,9 @@ void StabVoice::start (std::shared_ptr<SampleData> s, int n, float velocity, dou
     inc = std::pow (2.0, (n - home + tune) / 12.0) * sample->sourceRate / hostRate;
     pos = 0;
     gain = 0.35f + 0.65f * velocity;
-    adsr.setSampleRate (hostRate);
-    adsr.setParameters (env);
-    adsr.reset();
-    adsr.noteOn();
+    this->env.kill();
+    this->env.set (env.attack, env.decay, env.sustain, env.release, hostRate);
+    this->env.noteOn();
     // ogni colpo ha il suo filtro: un piccolo scarto casuale e l'inviluppo che riparte
     randOff = (rnd.nextFloat() * 2.0f - 1.0f) * ff.randOct + (velocity - 0.75f) * 0.6f;
     fEnv = 1.0f;
@@ -32,8 +31,8 @@ void StabVoice::start (std::shared_ptr<SampleData> s, int n, float velocity, dou
 void StabVoice::stop (bool allowTail)
 {
     keyDown = false;
-    if (allowTail) adsr.noteOff();
-    else { adsr.reset(); active = false; sample.reset(); }
+    if (allowTail) env.noteOff();
+    else { env.kill(); active = false; sample.reset(); }
 }
 
 void StabVoice::render (float* L, float* R, int n, const FilterFrame& ff, int lfoOffset)
@@ -55,7 +54,9 @@ void StabVoice::render (float* L, float* R, int n, const FilterFrame& ff, int lf
             float c1 = 0.5f * (y2 - y0), c2 = y0 - 2.5f * y1 + 2.0f * y2 - 0.5f * y3, c3 = 0.5f * (y3 - y0) + 1.5f * (y1 - y2);
             return ((c3 * f + c2) * f + c1) * f + y1;
         };
-        float e = adsr.getNextSample() * gain;
+        float e = env.next() * gain;
+        // dissolvenza di sicurezza sugli ultimi 256 campioni del sample
+        if (ip > len - 256) e *= (float) juce::jlimit (0.0, 1.0, (len - pos) / 256.0);
         float l = herm (sl, ip), r = herm (srp, ip);
 
         if (! ff.bypass)
@@ -92,7 +93,7 @@ void StabVoice::render (float* L, float* R, int n, const FilterFrame& ff, int lf
             step *= std::pow (2.0, cents / 1200.0);
         }
         pos += step;
-        if (! adsr.isActive()) { active = false; break; }
+        if (! env.isActive()) { active = false; break; }
     }
     if (! active) sample.reset();
 }
@@ -255,16 +256,23 @@ void PaffettiProcessor::handleMidi (const juce::MidiMessage& m)
         // stessa nota: chiude la precedente (con coda breve)
         for (auto& v : voices) if (v.isActive() && v.getNote() == m.getNoteNumber()) v.stop (true);
         int activeCount = 0;
-        for (auto& v : voices) if (v.isActive()) ++activeCount;
-        if (poly == 1) for (auto& v : voices) if (v.isActive()) v.stop (true);
+        for (auto& v : voices) if (v.isActive() && v.isKeyDown()) ++activeCount;
+        if (poly == 1) for (auto& v : voices) if (v.isActive() && v.isKeyDown()) v.stop (true);
         StabVoice* target = nullptr;
         for (auto& v : voices) if (! v.isActive()) { target = &v; break; }
-        if (target == nullptr || (poly > 1 && activeCount >= poly))
+        if (poly > 1 && activeCount >= poly)
         {
+            // troppe note tenute: la più vecchia sfuma con il suo release
+            StabVoice* oldestHeld = nullptr;
+            for (auto& v : voices) if (v.isActive() && v.isKeyDown() && (oldestHeld == nullptr || v.age < oldestHeld->age)) oldestHeld = &v;
+            if (oldestHeld != nullptr) oldestHeld->stop (true);
+        }
+        if (target == nullptr)
+        {
+            // tutte e 16 le voci occupate (raro): si prende quella più silenziosa/vecchia
             StabVoice* oldest = &voices[0];
             for (auto& v : voices) if (v.age < oldest->age) oldest = &v;
-            if (target == nullptr) { oldest->stop (false); target = oldest; }
-            else oldest->stop (true);
+            oldest->stop (false); target = oldest;
         }
         target->age = ++voiceCounter;
         target->start (s, m.getNoteNumber(), m.getFloatVelocity(), sr, apvts.getRawParameterValue ("tune")->load(), currentEnv(), makeFrame());

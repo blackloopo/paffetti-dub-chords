@@ -133,6 +133,66 @@ int main (int argc, char** argv)
     std::cout << "Stato ripristinato: " << proc2->getSelectedCategory() << " / " << proc2->getSelectedName()
               << "  cutoff=" << proc2->apvts.getRawParameterValue ("cutoff")->load() << "\n";
 
+    // ricerca click: note singole senza delay/molla/fruscio, cerca salti improvvisi nel segnale
+    if (juce::SystemStats::getEnvironmentVariable ("PDC_CLICKTEST", {}).isNotEmpty())
+    {
+        const double spb = 60.0 / 126.0 * sr;
+        auto& ps = proc->getPresets();
+        int withClick = 0;
+        for (int i = 0; i < ps.size(); ++i)
+        {
+            proc->prepareToPlay (sr, block);
+            proc->loadPreset (i);
+            setP (*proc, "dlyMix", 0); setP (*proc, "dlyFeed", 0); setP (*proc, "spMix", 0); setP (*proc, "hiss", 0);
+            setP (*proc, "phMix", 0); setP (*proc, "flMix", 0);
+            auto var = juce::SystemStats::getEnvironmentVariable ("PDC_CLICKVAR", {});
+            if (var == "duro") { setP (*proc, "decay", 300.0f); setP (*proc, "release", 8.0f); }
+            if (var == "mono") { setP (*proc, "poly", 0); setP (*proc, "release", 20.0f); }
+            const int total = (int) (sr * 7 / block);
+            std::vector<float> sig; sig.reserve ((size_t) (total * block));
+            for (int b = 0; b < total; ++b)
+            {
+                juce::MidiBuffer midi;
+                // stab in levare a 126 BPM per 5 secondi, come si suona davvero
+                double t0 = b * (double) block, t1 = t0 + block;
+                for (int h = 0; h < 22; ++h)
+                {
+                    double on = (h + 0.5) * spb * 0.5 + sr * 0.05, off = on + spb * 0.2;
+                    int nt = 60 + ((h / 4) % 3) * 2 - 2;
+                    if (on >= t0 && on < t1) midi.addEvent (juce::MidiMessage::noteOn (1, nt, (juce::uint8) 100), (int) (on - t0));
+                    if (off >= t0 && off < t1) midi.addEvent (juce::MidiMessage::noteOff (1, nt), (int) (off - t0));
+                }
+                buf.clear(); proc->processBlock (buf, midi);
+                for (int s = 0; s < block; ++s) sig.push_back (buf.getSample (0, s));
+            }
+            // salto = differenza seconda grande rispetto al livello locale
+            float worst = 0; size_t at = 0;
+            for (size_t n = 2; n < sig.size(); ++n)
+            {
+                float d2 = std::abs (sig[n] - 2 * sig[n - 1] + sig[n - 2]);
+                float loc = 0; for (size_t k = n > 64 ? n - 64 : 0; k < n - 2; ++k) loc = juce::jmax (loc, std::abs (sig[k] - 2 * sig[k + 1] + sig[k + 2]));
+                float ratio = d2 / (loc + 1e-4f);
+                if (n > (size_t) (sr * 0.15) && d2 > 2e-6f && ratio > worst) { worst = ratio; at = n; }
+            }
+            bool click = worst > 8.0f;
+            if (i == 50 || i == 52)   // salva il segnale di due preset per analizzarlo
+            {
+                juce::AudioBuffer<float> ab (1, (int) sig.size());
+                for (size_t n = 0; n < sig.size(); ++n) ab.setSample (0, (int) n, sig[n]);
+                juce::WavAudioFormat wav; auto f = outDir.getChildFile ("click" + juce::String (i) + ".wav"); f.deleteFile();
+                std::unique_ptr<juce::AudioFormatWriter> w (wav.createWriterFor (new juce::FileOutputStream (f), sr, 1, 32, {}, 0));
+                w->writeFromAudioSampleBuffer (ab, 0, ab.getNumSamples());
+                if (auto s = proc->getCurrentSample()) std::cout << "  durata sample " << s->buffer.getNumSamples() / s->sourceRate << " s\n";
+            }
+            if (click) ++withClick;
+            if (click || i % 10 == 0)
+                std::cout << "  " << ps[i].name << (click ? "  CLICK" : "  ok") << " (salto x" << juce::String (worst, 1)
+                          << " a " << juce::String (at / sr, 3) << " s)\n";
+        }
+        std::cout << "Preset con click: " << withClick << " su " << ps.size() << "\n";
+        return 0;
+    }
+
     // calibrazione dei volumi: livello medio (RMS) di ogni preset con un giro di stab
     auto cal = juce::SystemStats::getEnvironmentVariable ("PDC_CALIBRATE", {});
     if (cal.isNotEmpty())

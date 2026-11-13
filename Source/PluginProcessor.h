@@ -12,6 +12,37 @@ struct FilterFrame
     bool bypass = true;
 };
 
+// inviluppo di volume senza scatti: attacco lineare, decay e release esponenziali dal livello attuale
+struct SoftEnv
+{
+    int stage = 0;          // 0 fermo, 1 attacco, 2 decay/sustain, 3 release
+    float v = 0, out = 0, smooth = 0.01f, aInc = 0.01f, dCoef = 0.999f, rCoef = 0.999f, sus = 1;
+    void set (float a, float d, float s, float r, double sr)
+    {
+        smooth = 1.0f - std::exp (-1.0f / (float) (0.0015 * sr));   // levigatura di 1,5 ms sugli spigoli
+        aInc = 1.0f / (float) (juce::jmax (0.0001f, a) * sr);
+        dCoef = std::exp (-4.6f / (float) (juce::jmax (0.005f, d) * sr));
+        rCoef = std::exp (-6.9f / (float) (juce::jmax (0.005f, r) * sr));
+        sus = s;
+    }
+    void noteOn() { stage = 1; }                 // riparte dal livello attuale: niente salti
+    void noteOff() { if (stage != 0) stage = 3; }
+    void kill() { stage = 0; v = 0; out = 0; }
+    bool isActive() const { return stage != 0 || out > 1.0e-5f; }
+    inline float next()
+    {
+        switch (stage)
+        {
+            case 1: v += aInc; if (v >= 1.0f) { v = 1.0f; stage = 2; } break;
+            case 2: v = sus + (v - sus) * dCoef; break;
+            case 3: v *= rCoef; if (v < 1.0e-5f) { v = 0; stage = 0; } break;
+            default: v = 0;
+        }
+        out += smooth * (v - out);
+        return out;
+    }
+};
+
 class StabVoice
 {
 public:
@@ -23,7 +54,7 @@ public:
     int getNote() const { return note; }
     bool isKeyDown() const { return keyDown; }
     juce::uint64 age = 0;
-    void setEnv (const juce::ADSR::Parameters& p) { adsr.setParameters (p); }
+    void setEnv (const juce::ADSR::Parameters& p) { env.set (p.attack, p.decay, p.sustain, p.release, sr); }
     float lastCutoff = 0;
 
 private:
@@ -32,7 +63,7 @@ private:
     float gain = 1, randOff = 0, fEnv = 0, fEnvCoef = 0.999f, driftPh = 0, driftRate = 0.11f, walk = 0, walkTarget = 0;
     int note = -1, ctr = 0;
     bool active = false, keyDown = false;
-    juce::ADSR adsr;
+    SoftEnv env;
     dub::SVF f1[2], f2[2];
     float g = 1, k = 1.4f;
     juce::Random rnd;
@@ -112,7 +143,7 @@ private:
     std::shared_ptr<SampleData> current;
     std::vector<std::shared_ptr<SampleData>> keepAlive;   // i sample vecchi non vengono distrutti nel thread audio
 
-    static constexpr int maxVoices = 8;
+    static constexpr int maxVoices = 16;
     std::array<StabVoice, maxVoices> voices;
     juce::uint64 voiceCounter = 0;
 
