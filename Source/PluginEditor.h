@@ -77,6 +77,7 @@ public:
     void mouseDown (const juce::MouseEvent&) override;
     void mouseWheelMove (const juce::MouseEvent&, const juce::MouseWheelDetails&) override;
     void step (int delta);
+    void stepCategory (int delta);
     void randomPick();
     void showCategory (const juce::String& id);
     void refresh();
@@ -137,16 +138,35 @@ private:
     juce::Array<float> hist;
 };
 
+// display dei preset nella testata: < NOME > , clic al centro = menu per categoria
+class PresetBar : public juce::Component, private juce::Timer
+{
+public:
+    explicit PresetBar (PaffettiProcessor& p) : proc (p) { startTimerHz (8); }
+    void paint (juce::Graphics&) override;
+    void mouseDown (const juce::MouseEvent&) override;
+    void step (int delta);
+    void showMenu();
+private:
+    void timerCallback() override;
+    PaffettiProcessor& proc;
+    int seenIndex = -2; bool seenMod = false;
+};
+
 class MainPanel : public juce::Component, private juce::Timer
 {
 public:
     explicit MainPanel (PaffettiProcessor&);
     void paint (juce::Graphics&) override;
     void resized() override;
+    bool keyPressed (const juce::KeyPress&) override;
+    void mouseDown (const juce::MouseEvent&) override { grabKeyboardFocus(); }
+    CRTScreen& getScreen() { return screen; }
 private:
     void timerCallback() override;
     PaffettiProcessor& proc;
     CRTScreen screen;
+    PresetBar presetBar;
     PixelButton prevB { "<", pal::yellow }, nextB { ">", pal::yellow }, randB { "RANDOM", pal::green }, mineB { "+ MIEI SAMPLE", pal::aqua };
     Section sStab { "STAB", pal::yellow }, sDelay { "TAPE DELAY", pal::orange }, sFilter { "DUB FILTER", pal::green }, sPhaser { "PHASER", pal::red },
             sFlanger { "FLANGER", pal::aqua }, sSpring { "SPRING + TAPE", pal::green }, sOut { "OUTPUT", pal::cream };
@@ -167,6 +187,8 @@ public:
     ~PaffettiEditor() override;
     void paint (juce::Graphics&) override;
     void resized() override;
+    void parentHierarchyChanged() override;
+    MainPanel& getPanel() { return panel; }
     static constexpr int W = 1120, H = 780;
 private:
     RetroLNF lnf;

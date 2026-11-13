@@ -76,6 +76,13 @@ public:
     std::shared_ptr<SampleData> getCurrentSample() const;
     void setUserFolder (const juce::File&);
 
+    // ---- preset (thread dei messaggi) ----
+    struct Preset { juce::String name, category, sample; juce::NamedValueSet params; };
+    const juce::Array<Preset>& getPresets() const { return presets; }
+    void loadPreset (int index);
+    int getPresetIndex() const { return presetIndex; }
+    bool isPresetModified() const { return presetModified; }
+
     juce::AudioProcessorValueTreeState apvts;
     juce::MidiKeyboardState keyboardState;
 
@@ -96,6 +103,10 @@ private:
     static double divToBeats (const juce::String& d);
 
     Library library;
+    juce::Array<Preset> presets;
+    int presetIndex = -1;
+    bool presetModified = false, loadingPreset = false;
+    void loadPresetList();
     juce::String selCategory { "MD" }, selName;
     mutable juce::SpinLock sampleLock;
     std::shared_ptr<SampleData> current;

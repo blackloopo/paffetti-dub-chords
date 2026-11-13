@@ -312,6 +312,7 @@ void CRTScreen::paint (juce::Graphics& g)
 
 void CRTScreen::mouseDown (const juce::MouseEvent& e)
 {
+    if (auto* p = getParentComponent()) p->grabKeyboardFocus();
     auto& cats = proc.getLibrary().getCategories();
     for (int i = 0; i < cats.size(); ++i)
         if (tabRect (i).contains (e.getPosition())) { showCategory (cats[i].id); return; }
@@ -339,6 +340,15 @@ void CRTScreen::step (int delta)
     sel = (sel < 0 ? 0 : (sel + delta + entries.size()) % entries.size());
     proc.selectSample (category, entries[sel].name);
     refresh();
+}
+
+void CRTScreen::stepCategory (int delta)
+{
+    auto& cats = proc.getLibrary().getCategories();
+    int idx = 0;
+    for (int i = 0; i < cats.size(); ++i) if (cats[i].id == category) idx = i;
+    idx = (idx + delta + cats.size()) % cats.size();
+    showCategory (cats[idx].id);
 }
 
 void CRTScreen::randomPick()
@@ -414,6 +424,86 @@ void KeyboardView::mouseUp (const juce::MouseEvent&)
     mouseNote = -1;
 }
 
+// ======================= preset =======================
+void PresetBar::timerCallback()
+{
+    if (proc.getPresetIndex() != seenIndex || proc.isPresetModified() != seenMod)
+    {
+        seenIndex = proc.getPresetIndex(); seenMod = proc.isPresetModified();
+        repaint();
+    }
+}
+
+void PresetBar::paint (juce::Graphics& g)
+{
+    auto r = getLocalBounds();
+    g.setColour (pal::edge); g.fillRect (r);
+    auto lcd = r.reduced (3);
+    g.setColour (pal::screen); g.fillRect (lcd);
+    auto left = lcd.removeFromLeft (26), right = lcd.removeFromRight (26);
+    for (auto* b : { &left, &right })
+    {
+        g.setColour (pal::orange); g.fillRect (b->reduced (3));
+        juce::Path tri;
+        auto c = b->toFloat().getCentre();
+        if (b == &left) tri.addTriangle (c.x + 4, c.y - 6, c.x + 4, c.y + 6, c.x - 5, c.y);
+        else            tri.addTriangle (c.x - 4, c.y - 6, c.x - 4, c.y + 6, c.x + 5, c.y);
+        g.setColour (pal::bg); g.fillPath (tri);
+    }
+    auto& ps = proc.getPresets();
+    int idx = proc.getPresetIndex();
+    juce::String top = "PRESET", name = "- SCEGLI UN PRESET -";
+    if (juce::isPositiveAndBelow (idx, ps.size()))
+    {
+        juce::String catName;
+        for (auto& c : proc.getLibrary().getCategories()) if (c.id == ps[idx].category) catName = c.name;
+        int n = 0, k = 0;
+        for (int i = 0; i < ps.size(); ++i) if (ps[i].category == ps[idx].category) { ++n; if (i <= idx) k = n; }
+        top = "PRESET " + juce::String (k).paddedLeft ('0', 2) + "/" + juce::String (n) + "  " + catName.toUpperCase();
+        name = ps[idx].name.toUpperCase() + (proc.isPresetModified() ? " *" : "");
+    }
+    lcd.reduce (8, 0);
+    pixelText (g, top, lcd.removeFromTop (lcd.getHeight() / 2).withTrimmedTop (4), 7.0f, pal::orange, juce::Justification::centredLeft);
+    g.setFont (RetroFonts::vt (24.0f)); g.setColour (pal::yellow);
+    g.drawText (name, lcd.withTrimmedBottom (2), juce::Justification::centredLeft, true);
+    g.setColour (juce::Colours::black.withAlpha (0.25f));
+    for (int yy = 3; yy < getHeight() - 3; yy += 3) g.fillRect (3, yy, getWidth() - 6, 1);
+}
+
+void PresetBar::step (int delta)
+{
+    auto& ps = proc.getPresets();
+    if (ps.isEmpty()) return;
+    int idx = proc.getPresetIndex();
+    idx = idx < 0 ? (delta > 0 ? 0 : ps.size() - 1) : (idx + delta + ps.size()) % ps.size();
+    proc.loadPreset (idx);
+    repaint();
+}
+
+void PresetBar::showMenu()
+{
+    auto& ps = proc.getPresets();
+    juce::PopupMenu menu;
+    for (auto& c : proc.getLibrary().getCategories())
+    {
+        juce::PopupMenu sub;
+        for (int i = 0; i < ps.size(); ++i)
+            if (ps[i].category == c.id) sub.addItem (i + 1, ps[i].name, true, i == proc.getPresetIndex());
+        if (sub.getNumItems() > 0) menu.addSubMenu (c.name.toUpperCase(), sub, true, nullptr, ps[proc.getPresetIndex() < 0 ? 0 : proc.getPresetIndex()].category == c.id && proc.getPresetIndex() >= 0);
+    }
+    juce::Component::SafePointer<PresetBar> safe (this);
+    menu.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (this).withMinimumWidth (getWidth()),
+                        [safe] (int r) { if (safe != nullptr && r > 0) { safe->proc.loadPreset (r - 1); safe->repaint(); } });
+}
+
+void PresetBar::mouseDown (const juce::MouseEvent& e)
+{
+    if (e.x < 29) step (-1);
+    else if (e.x > getWidth() - 29) step (1);
+    else showMenu();
+    if (auto* p = getParentComponent()) p->grabKeyboardFocus();
+}
+
 // ======================= scope del filtro =======================
 void FilterScope::timerCallback()
 {
@@ -457,10 +547,12 @@ MainPanel::MainPanel (PaffettiProcessor& p)
       fltMode (p.apvts, "fltMode", { "LP", "BP", "HP" }),
       lfoShape (p.apvts, "lfoShape", { "SIN", "TRI", "RMP", "S&H" }),
       lfoSync (p.apvts, "lfoSync", { "SYNC" }),
-      scope (p), meter (p), keyboard (p)
+      presetBar (p), scope (p), meter (p), keyboard (p)
 {
     for (auto* s : { &sStab, &sDelay, &sFilter, &sPhaser, &sFlanger, &sSpring, &sOut }) addAndMakeVisible (s);
     addAndMakeVisible (screen);
+    addAndMakeVisible (presetBar);
+    setWantsKeyboardFocus (true);
     for (auto* b : { &prevB, &nextB, &randB, &mineB }) addAndMakeVisible (b);
     prevB.onClick = [this] { screen.step (-1); };
     nextB.onClick = [this] { screen.step (1); };
@@ -505,6 +597,18 @@ MainPanel::MainPanel (PaffettiProcessor& p)
     addAndMakeVisible (keyboard);
     timerCallback();
     startTimerHz (10);
+}
+
+bool MainPanel::keyPressed (const juce::KeyPress& k)
+{
+    const int code = k.getKeyCode();
+    if (code == juce::KeyPress::downKey)     { screen.step (1);  return true; }
+    if (code == juce::KeyPress::upKey)       { screen.step (-1); return true; }
+    if (code == juce::KeyPress::rightKey)    { screen.stepCategory (1);  return true; }
+    if (code == juce::KeyPress::leftKey)     { screen.stepCategory (-1); return true; }
+    if (code == juce::KeyPress::pageDownKey) { presetBar.step (1);  return true; }
+    if (code == juce::KeyPress::pageUpKey)   { presetBar.step (-1); return true; }
+    return false;
 }
 
 void MainPanel::timerCallback()
@@ -572,12 +676,13 @@ void MainPanel::paint (juce::Graphics& g)
     g.setFont (RetroFonts::vt (22.0f)); g.setColour (pal::yellow);
     g.drawFittedText (chordText, { 18, 668, 136, 44 }, juce::Justification::topLeft, 2);
     pixelText (g, "POLY", { 1040, 696, 60, 12 }, 7.0f, pal::tan, juce::Justification::centredRight);
-    pixelText (g, "v0.2.1", { 1040, 752, 60, 12 }, 6.0f, pal::rim.brighter (0.5f), juce::Justification::centredRight);
+    pixelText (g, "v0.3", { 1040, 752, 60, 12 }, 6.0f, pal::rim.brighter (0.5f), juce::Justification::centredRight);
 }
 
 void MainPanel::resized()
 {
     screen.setBounds (30, 96, 406, 452);
+    presetBar.setBounds (480, 10, 300, 48);
     prevB.setBounds (30, 560, 40, 36); nextB.setBounds (76, 560, 40, 36); randB.setBounds (122, 560, 84, 36);
     mineB.setBounds (300, 560, 136, 36);
 
@@ -654,6 +759,13 @@ PaffettiEditor::PaffettiEditor (PaffettiProcessor& p) : AudioProcessorEditor (p)
 }
 
 PaffettiEditor::~PaffettiEditor() { setLookAndFeel (nullptr); }
+
+void PaffettiEditor::parentHierarchyChanged()
+{
+    // appena la finestra è sullo schermo, il pannello prende i tasti (frecce)
+    juce::Component::SafePointer<MainPanel> safe (&panel);
+    juce::MessageManager::callAsync ([safe] { if (safe != nullptr && safe->isShowing()) safe->grabKeyboardFocus(); });
+}
 
 void PaffettiEditor::paint (juce::Graphics& g) { g.fillAll (pal::body); }
 

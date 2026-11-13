@@ -133,6 +133,71 @@ int main (int argc, char** argv)
     std::cout << "Stato ripristinato: " << proc2->getSelectedCategory() << " / " << proc2->getSelectedName()
               << "  cutoff=" << proc2->apvts.getRawParameterValue ("cutoff")->load() << "\n";
 
+    // calibrazione dei volumi: livello medio (RMS) di ogni preset con un giro di stab
+    auto cal = juce::SystemStats::getEnvironmentVariable ("PDC_CALIBRATE", {});
+    if (cal.isNotEmpty())
+    {
+        juce::DynamicObject::Ptr res = new juce::DynamicObject();
+        auto& ps = proc->getPresets();
+        for (int i = 0; i < ps.size(); ++i)
+        {
+            proc->loadPreset (i);
+            proc->prepareToPlay (sr, block);          // azzera code di delay e molla
+            proc->loadPreset (i);
+            double sum = 0; long cnt = 0;
+            const int total = (int) (sr * 6 / block);
+            for (int b = 0; b < total; ++b)
+            {
+                juce::MidiBuffer midi;
+                double t0 = b * (double) block, t1 = t0 + block;
+                for (int h = 0; h < 8; ++h)
+                {
+                    double on = (h + 0.5) * spb, off = on + spb * 0.25;
+                    if (on >= t0 && on < t1) midi.addEvent (juce::MidiMessage::noteOn (1, 60, (juce::uint8) 100), (int) (on - t0));
+                    if (off >= t0 && off < t1) midi.addEvent (juce::MidiMessage::noteOff (1, 60), (int) (off - t0));
+                }
+                buf.clear(); proc->processBlock (buf, midi);
+                for (int c = 0; c < 2; ++c) for (int s = 0; s < block; ++s) { double v = buf.getSample (c, s); sum += v * v; ++cnt; }
+            }
+            double rmsDb = 10.0 * std::log10 (sum / juce::jmax (1L, cnt) + 1e-12);
+            res->setProperty (ps[i].name, rmsDb);
+        }
+        juce::File (cal).replaceWithText (juce::JSON::toString (juce::var (res.get())));
+        std::cout << "Calibrazione scritta: " << cal << "\n";
+    }
+
+    // preset: tutti caricabili, sample presente, parametri applicati
+    {
+        int ok = 0, ko = 0;
+        auto& ps = proc->getPresets();
+        for (int i = 0; i < ps.size(); ++i)
+        {
+            proc->loadPreset (i);
+            bool good = proc->getSelectedName() == ps[i].sample && proc->getSelectedCategory() == ps[i].category;
+            if (ps[i].params.contains ("cutoff"))
+                good = good && std::abs (proc->apvts.getRawParameterValue ("cutoff")->load() - (float) (double) ps[i].params["cutoff"]) < 2.0f;
+            if (good) ++ok; else { ++ko; std::cout << "  PRESET NON VALIDO: " << ps[i].name << "\n"; }
+        }
+        std::cout << "Preset caricati correttamente: " << ok << " su " << ps.size() << ", non validi: " << ko << "\n";
+        // un preset fa rumore? render breve di ognuno dei primi di categoria
+        int silent = 0;
+        for (int i = 0; i < ps.size(); i += 10)
+        {
+            proc->loadPreset (i);
+            float pk = 0;
+            for (int b = 0; b < 200; ++b)
+            {
+                juce::MidiBuffer midi;
+                if (b == 2) midi.addEvent (juce::MidiMessage::noteOn (1, 60, (juce::uint8) 100), 0);
+                if (b == 60) midi.addEvent (juce::MidiMessage::noteOff (1, 60), 0);
+                buf.clear(); proc->processBlock (buf, midi); pk = juce::jmax (pk, buf.getMagnitude (0, block));
+            }
+            std::cout << "  " << ps[i].name << ": picco " << juce::String (juce::Decibels::gainToDecibels (pk), 1) << " dB\n";
+            if (pk < 0.01f) ++silent;
+        }
+        std::cout << "Preset muti: " << silent << "\n";
+    }
+
     // fotografia dell'interfaccia
     proc->selectSample ("MD", lib.getEntries ("MD")[0].name);
     if (auto s = proc->getCurrentSample())
@@ -143,6 +208,26 @@ int main (int argc, char** argv)
     {
         std::unique_ptr<juce::AudioProcessorEditor> ed (proc->createEditor());
         ed->setSize (PaffettiEditor::W, PaffettiEditor::H);
+        // frecce: giù tre volte, poi destra (categoria successiva) e giù
+        if (auto* pe = dynamic_cast<PaffettiEditor*> (ed.get()))
+        {
+            auto& panel = pe->getPanel();
+            auto before = proc->getSelectedName();
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::downKey));
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::downKey));
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::downKey));
+            std::cout << "Freccia giù x3: " << before << " -> " << proc->getSelectedName() << "\n";
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::upKey));
+            std::cout << "Freccia su: -> " << proc->getSelectedName() << "\n";
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::rightKey));
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::downKey));
+            std::cout << "Destra + giù: -> " << proc->getSelectedCategory() << " / " << proc->getSelectedName() << "\n";
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::pageDownKey));
+            std::cout << "Pagina giù (preset successivo): " << proc->getPresetIndex() << " " << proc->getSelectedName() << "\n";
+            proc->loadPreset (11);   // per la foto: un preset Basic Channel
+            panel.keyPressed (juce::KeyPress (juce::KeyPress::downKey));
+            std::cout << "Preset + giù: " << proc->getSelectedName() << " modificato=" << (int) proc->isPresetModified() << "\n";
+        }
 
         auto img = ed->createComponentSnapshot (ed->getLocalBounds(), true, 1.0f);
         auto f = outDir.getChildFile ("ui.png"); f.deleteFile();

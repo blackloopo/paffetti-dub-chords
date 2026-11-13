@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(PaffettiDubChords VERSION 0.2.1)
+project(PaffettiDubChords VERSION 0.3.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,7 +15,8 @@ option(PDC_BUILD_TESTS  "Compila il banco di prova (solo Linux)" OFF)
 
 juce_add_binary_data(PDCBinary SOURCES
     Resources/Fonts/PressStart2P-Regular.ttf
-    Resources/Fonts/VT323-Regular.ttf)
+    Resources/Fonts/VT323-Regular.ttf
+    Resources/presets.json)
 
 set(PDC_SOURCES
     Source/PluginProcessor.cpp
@@ -51,7 +52,7 @@ if(PDC_BUILD_PLUGIN)
         NEEDS_MIDI_INPUT TRUE
         NEEDS_MIDI_OUTPUT FALSE
         IS_MIDI_EFFECT FALSE
-        EDITOR_WANTS_KEYBOARD_FOCUS FALSE
+        EDITOR_WANTS_KEYBOARD_FOCUS TRUE
         COPY_PLUGIN_AFTER_BUILD FALSE
         AU_MAIN_TYPE kAudioUnitType_MusicDevice
         VST3_CATEGORIES Instrument Sampler)

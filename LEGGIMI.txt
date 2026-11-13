@@ -1,4 +1,4 @@
-PAFFETTI DUB CHORDS  v0.2
+PAFFETTI DUB CHORDS  v0.3
 Powered by Black Loops
 
 Sampler di stab dub techno: ogni tasto suona un accordo completo.
@@ -23,6 +23,12 @@ INSTALLAZIONE
    Lo trovi negli strumenti sotto Black Loops.
 
 COME SI SUONA
+- PRESET: il display in alto. < > = preset precedente/successivo, clic sul nome =
+  menu diviso per categoria (10 preset per ognuna delle 9 categorie, volumi livellati).
+  Puoi sempre cambiare stab a mano: il nome del preset prende un asterisco (*).
+- TASTIERA DEL COMPUTER (clicca prima sulla finestra del plugin):
+  freccia giù/su = stab successivo/precedente, freccia destra/sinistra = categoria,
+  Pagina giù/su = preset successivo/precedente.
 - C3 suona l'accordo alla sua altezza originale; gli altri tasti lo traspongono.
 - Clicca le categorie sullo schermo, la rotella scorre la lista, < > cambiano stab.
 - Doppio clic su una manopola = valore iniziale.

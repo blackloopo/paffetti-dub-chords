@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "BinaryData.h"
 
 using APVTS = juce::AudioProcessorValueTreeState;
 
@@ -74,6 +75,7 @@ void StabVoice::render (float* L, float* R, int n, const FilterFrame& ff, int lf
                 float x = c ? r : l;
                 float y = f1[c].process (x, g, k, ff.mode);
                 if (ff.mode == 0) y = f2[c].process (y, g, 1.414f, 0);   // passa-basso a 24 dB
+                else if (ff.mode == 1) y *= 1.6f + 2.6f * ff.reso;      // il passa-banda stretto perde energia: guadagno di compensazione
                 if (c) r = y; else l = y;
             }
         }
@@ -173,6 +175,7 @@ PaffettiProcessor::PaffettiProcessor()
     : AudioProcessor (BusesProperties().withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
       apvts (*this, nullptr, "PARAMS", createLayout())
 {
+    loadPresetList();
     // si apre sulla prima categoria (MANGO) e sul primo stab
     auto& cats = library.getCategories();
     if (! cats.isEmpty())
@@ -436,6 +439,9 @@ void PaffettiProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mi
         if (hi != 0.0f) { l = highShelf[0].processSample (l); r = highShelf[1].processSample (r); }
         l *= gv; r *= gv;
         if (! std::isfinite (l) || ! std::isfinite (r)) { l = r = 0; }
+        // limitatore morbido: sopra -2 dB arrotonda, non supera mai 0 dB
+        auto soft = [] (float x) { float a = std::abs (x); if (a <= 0.8f) return x; float y = 0.8f + 0.2f * std::tanh ((a - 0.8f) / 0.2f); return x < 0 ? -y : y; };
+        l = soft (l); r = soft (r);
         L[i] = l; R[i] = r;
         peak = juce::jmax (peak, std::abs (l), std::abs (r));
     }
@@ -457,8 +463,48 @@ bool PaffettiProcessor::selectSample (const juce::String& cat, const juce::Strin
     // libera i sample vecchi non più usati dalle voci (rimangono solo gli ultimi)
     while (keepAlive.size() > 12) keepAlive.erase (keepAlive.begin());
     selCategory = cat; selName = name;
+    if (! loadingPreset && presetIndex >= 0) presetModified = true;   // sample cambiato a mano dopo un preset
     ++sampleVersion;
     return true;
+}
+
+void PaffettiProcessor::loadPresetList()
+{
+    auto json = juce::JSON::parse (juce::String::fromUTF8 (BinaryData::presets_json, BinaryData::presets_jsonSize));
+    if (auto* arr = json.getProperty ("presets", {}).getArray())
+        for (auto& v : *arr)
+        {
+            Preset p;
+            p.name = v.getProperty ("name", {}).toString();
+            p.category = v.getProperty ("cat", {}).toString();
+            p.sample = v.getProperty ("sample", {}).toString();
+            if (auto* obj = v.getProperty ("params", {}).getDynamicObject())
+                p.params = obj->getProperties();
+            presets.add (p);
+        }
+}
+
+void PaffettiProcessor::loadPreset (int index)
+{
+    if (! juce::isPositiveAndBelow (index, presets.size())) return;
+    auto& p = presets.getReference (index);
+    loadingPreset = true;
+    // tutti i parametri tornano al valore iniziale, poi si applicano quelli del preset
+    for (auto* prm : getParameters())
+        if (auto* r = dynamic_cast<juce::RangedAudioParameter*> (prm))
+        {
+            float v01 = r->getDefaultValue();
+            if (p.params.contains (r->getParameterID()))
+                v01 = r->convertTo0to1 ((float) (double) p.params[r->getParameterID()]);
+            r->beginChangeGesture();
+            r->setValueNotifyingHost (v01);
+            r->endChangeGesture();
+        }
+    selectSample (p.category, p.sample);
+    presetIndex = index;
+    presetModified = false;
+    loadingPreset = false;
+    ++sampleVersion;
 }
 
 void PaffettiProcessor::setUserFolder (const juce::File& f)
@@ -472,6 +518,8 @@ void PaffettiProcessor::getStateInformation (juce::MemoryBlock& dest)
     state.setProperty ("category", selCategory, nullptr);
     state.setProperty ("sample", selName, nullptr);
     state.setProperty ("userFolder", library.getUserFolder().getFullPathName(), nullptr);
+    state.setProperty ("preset", presetIndex, nullptr);
+    state.setProperty ("presetModified", presetModified, nullptr);
     if (auto xml = state.createXml()) copyXmlToBinary (*xml, dest);
 }
 
@@ -485,8 +533,14 @@ void PaffettiProcessor::setStateInformation (const void* data, int size)
         if (uf.isNotEmpty() && juce::File::isAbsolutePath (uf)) library.setUserFolder (juce::File (uf));
         auto cat = state.getProperty ("category").toString();
         auto nm = state.getProperty ("sample").toString();
+        int pi = (int) state.getProperty ("preset", -1);
+        bool pm = (bool) state.getProperty ("presetModified", false);
         apvts.replaceState (state);
+        loadingPreset = true;
         if (cat.isNotEmpty()) selectSample (cat, nm);
+        loadingPreset = false;
+        presetIndex = juce::isPositiveAndBelow (pi, presets.size()) ? pi : -1;
+        presetModified = pm;
     }
 }
 
